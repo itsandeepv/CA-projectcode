@@ -44,7 +44,7 @@ const SignUp = () => {
     email: "",
     password: "",
     fullName: "",
-    userName: "",
+    username: "",
     phoneNumber: "",
   });
 
@@ -162,8 +162,8 @@ const SignUp = () => {
               <FormLabel>User Name</FormLabel>
               <Input
                 type="text"
-                name="userName"
-                value={form.userName}
+                name="username"
+                value={form.username}
                 onChange={handleChange}
               />
             </FormControl>

@@ -41,9 +41,7 @@ const Login = () => {
     const navigate = useNavigate();
     // const selector = useSelector(store => store.Signin);
     const { token, loginData } = useSelector(store => store.Signin)
-    // console.log(token, data)
-    const auth = useContext(AppContext);
-
+    // console.log(loading , "<<<loading")
     // {}
     const company = [{}]
 
@@ -58,9 +56,6 @@ const Login = () => {
             return alert('Please Fill All the fields')
         }
         dispatch(LoginAction(form,navigate));
-
-       
-
     }
 
 

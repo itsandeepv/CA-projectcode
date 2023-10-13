@@ -22,14 +22,15 @@ import { AiFillHome } from 'react-icons/ai';
 
 export default function Navbar_AL() {
     const navigate = useNavigate();
+    const userData = sessionStorage.getItem("userDetails") ? JSON.parse(sessionStorage.getItem("userDetails")) : null
 
 
     return (
         <Box position={"sticky"} top={"0px"} zIndex={"1"} justifyContent='center' alignItems='center'>
-        {/* top bar */}
+            {/* top bar */}
             <Flex p="0 5%" display={{ base: "none", lg: "flex" }}
-            height='40px'
-            justifyContent="space-between" backgroundColor="#1E1E1E" fontSize="sm" alignItems="center">
+                height='40px'
+                justifyContent="space-between" backgroundColor="#1E1E1E" fontSize="sm" alignItems="center">
                 <Flex alignItems="center" gap="8px" fontFamily="'Montserrat', sans-serif">
                     <Link to="/">
                         <AiFillHome color="white" size={20} />
@@ -40,10 +41,10 @@ export default function Navbar_AL() {
                 </Flex>
                 <Flex color="white" alignItems="center" gap="8px" padding="5px" as="b" fontFamily="'Poppins', sans-serif">
                     <Text mt='5'><Link to="/profile">Contact Us</Link></Text>
-                    <Text borderRight="1px solid white" 
+                    <Text borderRight="1px solid white"
                         paddingRight="5px" mt='5' mr='4'
                     >
-                    <Link to="#" mt='5' ml='2'>Blog</Link></Text>
+                        <Link to="#" mt='5' ml='2'>Blog</Link></Text>
                     <Link to="">
                         <FiMail color="white" size={18} />
                     </Link>
@@ -59,81 +60,98 @@ export default function Navbar_AL() {
                 </Flex>
             </Flex>
             {/* menu bar */}
-            <Flex backgroundColor="#FFB91D" fontFamily="'Roboto', sans-serif" as="b" 
-            px='6' py='2'
-            justifyContent="space-between" alignItems="center" margin={"auto"}
+            <Flex backgroundColor="#FFB91D" fontFamily="'Roboto', sans-serif" as="b"
+                px='6' py='2'
+                justifyContent="space-between" alignItems="center" margin={"auto"}
             >
                 <Link to="/">
-                    <Box width="85%" ml={2}><Image src={icon}/></Box>
+                    <Box width="85%" ml={2}><Image src={icon} /></Box>
                 </Link>
                 <Flex
-                justifyContent="center" 
-                alignItems="center" // Align children to center vertically
-                gap="15px" // Gap between menu items
-                display={{ base: "none", lg: "flex" }} // Responsive display
+                    justifyContent="center"
+                    alignItems="center" // Align children to center vertically
+                    gap="15px" // Gap between menu items
+                    display={{ base: "none", lg: "flex" }} // Responsive display
                 >
                     <Text _hover={{ backgroundColor: "white", borderRadius: "10px" }}
                         mt='2' p='2'
                     >
-                        <Link to="/buisness"><BusinessSetup/></Link>
+                        <Link to="/buisness"><BusinessSetup /></Link>
                     </Text>
                     <Text _hover={{ backgroundColor: "white", borderRadius: "10px" }} mt='2' p='2'
                     >
-                    <Link to="/tax"><TaxCompliance /></Link>
+                        <Link to="/tax"><TaxCompliance /></Link>
                     </Text>
                     <Text _hover={{ backgroundColor: "white", borderRadius: "10px" }}
                         mt='2' p='2'
                     >
-                    <Link to="/income"><IncomeTax /></Link>
+                        <Link to="/income"><IncomeTax /></Link>
                     </Text>
                     <Text _hover={{ backgroundColor: "white", borderRadius: "10px" }}
                         mt='2' p='2'
                     >
-                    <Link to="/trademark"><TrademarkIP /></Link>
+                        <Link to="/trademark"><TrademarkIP /></Link>
                     </Text>
                     <Text _hover={{ backgroundColor: "white", borderRadius: "10px" }}
                         mt='2' p='2'
                     >
-                    <Link to="/ngo"><NGO/></Link>
+                        <Link to="/ngo"><NGO /></Link>
                     </Text>
                     <Text _hover={{ backgroundColor: "white", borderRadius: "10px" }}
                         mt='2' p='2'
                     >
-                    <Link to="/fund"><FundRaising /></Link>
+                        <Link to="/fund"><FundRaising /></Link>
                     </Text>
                     <Text _hover={{ backgroundColor: "white", borderRadius: "10px" }}
                         mt='2' p='2'
                     >
-                    <Link to="/Software">SOFTWARE</Link>
+                        <Link to="/Software">SOFTWARE</Link>
                     </Text>
                     {/* user icon */}
                     <Menu alignItems='center'>
-                        <MenuButton as={IconButton} icon={<FaUser />} 
+                        <MenuButton as={IconButton} icon={<FaUser />}
                             mb='3'
                             size='lg'
-                            style={{backgroundColor:'transparent'}}
+                            style={{ backgroundColor: 'transparent' }}
                             onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'white'}
                             onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                         />
                         <MenuList>
-                            <MenuItem onClick={()=> navigate('/Login')}>
-                            <Flex align='center'>
-                            {/* <FaUser/> */}
-                            <Text ml={2}> LogIn </Text>
-                            </Flex>
-                            </MenuItem>
-                            <MenuItem onClick={()=> navigate('/Signup')}>
-                                <Flex align='center'>
-                                {/* <FaUser/> */}
-                                <Text ml={2}> SignUp </Text>
-                                </Flex>
-                            </MenuItem>
-                            <MenuItem onClick={()=> navigate('/Profile')}>
-                                <Flex align='center' alignItems='center' justifyContent='center'>
-                                    <FaUser/>
-                                    <Text ml={2}> My Profile </Text>
-                                </Flex>
-                            </MenuItem>
+                            {
+                                userData ?
+                                    <>
+                                        <MenuItem onClick={() => navigate('/Profile')}>
+                                            <Flex  ml={2} gap={"12px"} display={"flex"} align='center' alignItems='center' justifyContent='center'>
+                                                <FaUser />
+                                                My Profile
+                                            </Flex>
+                                        </MenuItem>
+                                        <MenuItem onClick={() => {
+                                            sessionStorage.clear()
+                                            navigate('/Login')
+                                        }}>
+                                            <Flex align='center'>
+                                                {/* <FaUser/> */}
+                                                <Text ml={2}> Log out </Text>
+                                            </Flex>
+                                        </MenuItem>
+                                    </> :
+                                    <>
+                                        <MenuItem onClick={() => navigate('/Login')}>
+                                            <Flex align='center'>
+                                                {/* <FaUser/> */}
+                                                <Text ml={2}> LogIn </Text>
+                                            </Flex>
+                                        </MenuItem>
+                                        <MenuItem onClick={() => navigate('/Signup')}>
+                                            <Flex align='center'>
+                                                {/* <FaUser/> */}
+                                                <Text ml={2}> SignUp </Text>
+                                            </Flex>
+                                        </MenuItem>
+                                    </>
+                            }
+
                         </MenuList>
                     </Menu>
                 </Flex>

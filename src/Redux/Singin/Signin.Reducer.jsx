@@ -17,8 +17,9 @@ export const Signin_Reducer = (state = initialState, { type, payload }) => {
             return { ...state, loading: true, error: false };
         }
         case SUCCESS_LOGIN: {
-            localStorage.setItem('token', payload.data.token);
-            console.log("paysdkjccdwjf", payload.data)
+            // localStorage.setItem('token', payload.data.token);
+            sessionStorage.setItem("userDetails" ,JSON.stringify(payload.data) )
+            // console.log("paysdkjccdwjf", payload.data)
             return { ...state, loading: false, error: false, loginData: payload, token: payload.data.token }
 
         }

@@ -117,7 +117,6 @@ const Documents = () => {
                   colorScheme={selectedValue == null ? "disabled" : "blue"}
                   onClick={handleUpload}
                   disabled={selectedValue == null}
-                
                 >
                   Upload KYC
                 </Button>
