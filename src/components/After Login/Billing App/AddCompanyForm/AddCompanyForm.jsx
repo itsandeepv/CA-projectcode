@@ -7,9 +7,11 @@ import Company_name from '../Company_name/Company_name';
 
 
 const AddCompanyForm = () => {
-    const { token } = useSelector((store) => store.Signin);
     const dispatch = useDispatch();
-
+    const UserDetails = sessionStorage.getItem("userDetails") ? JSON.parse(sessionStorage.getItem("userDetails")) : null
+   
+//    const store = useSelector((state)=>state)
+//    console.log(store ,"<<<<<");
     const [formData, setFormData] = useState({
         companyLogo: "",
         companyName: "",
@@ -23,6 +25,7 @@ const AddCompanyForm = () => {
         businessType: "",
         businessRegistrationType: "",
         businessDescription: "",
+        userId: UserDetails?.userId
     });
 
     const { isOpen, onOpen } = useDisclosure();
@@ -46,7 +49,7 @@ const AddCompanyForm = () => {
 
 
     const handleRegisterFirm = () => {
-        dispatch(firmRegisterAction(formData, token));
+        dispatch(firmRegisterAction(formData, UserDetails?.token));
     };
 
 

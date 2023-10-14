@@ -69,7 +69,7 @@ const SoftwareLogin = () => {
                         onClick={LogInHandle}>
                         Sign In
                     </Button>
-                    <Link color={'blue.400'} href="/software-signup">Don't have an account? Sign Up</Link>
+                    <Link color={'blue.400'} href="/AddCompanyForm">Don't have an account? Sign Up</Link>
                     <Button
                         mt={4}
                         colorScheme="green"

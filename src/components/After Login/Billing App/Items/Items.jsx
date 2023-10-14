@@ -39,6 +39,7 @@ import {
 } from "../../../../Redux/Category/category.actions"
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import moment from "moment/moment";
 
 
 const Items = () => {
@@ -60,14 +61,12 @@ const Items = () => {
   ];
   const modal1 = useDisclosure();
   const modal2 = useDisclosure();
-  const token = localStorage.getItem("token");
-  console.log("🚀 ~ file: Items.jsx:63 ~ Items ~ token:", token)
   const { firmId } = useSelector((store) => store.FirmRegistration);
   const { getStockData } = useSelector((store) => store.stockReducer);
-  console.log("🚀 ~ file: Items.jsx:65 ~ Items ~ getStockData:", getStockData)
   const Categories = useSelector((store) => store.categoryReducer);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
+  console.log(":Categories" ,firmId)
 
   useEffect(() => {
     if (selectedCategories.length === 0) {
@@ -93,8 +92,10 @@ const Items = () => {
     cost: "",
     supplier: "",
     expiryDate: "",
+    manufactureDate: "",
     gstRate: "",
-    firmId: `${firmId}`,
+    firmId: firmId
+    //  ,
   });
 
   useEffect(() => {
@@ -118,23 +119,26 @@ const Items = () => {
 
   const handleChangeItems = (e) => {
     e.preventDefault();
-
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
+
+    console.log(form ,"<<<<");
   };
+  const userDetails = JSON.parse(sessionStorage.getItem("userDetails")) ?JSON.parse(sessionStorage.getItem("userDetails")):null
 
   const handleItemsAdd = () => {
-    dispatch(postStockAction(form, token));
+    dispatch(postStockAction(form, userDetails?.token));
+    modal1.onClose();
   };
 
   useEffect(() => {
-    dispatch(getStockAction(token, firmId));
-    dispatch(getCategoriesAction(token, firmId));
+    dispatch(getStockAction(userDetails?.token, firmId));
+    dispatch(getCategoriesAction(userDetails?.token, firmId));
   }, [firmId]);
 
   const handleAddCategory = () => {
     // Logic to add the new category
-    dispatch(postCategoryAction(categoryForm, token, firmId));
+    dispatch(postCategoryAction(categoryForm, userDetails?.token, firmId));
     modal2.onClose();
   };
 
@@ -149,11 +153,12 @@ const Items = () => {
   };
 
   const handleDelete = (id) =>{
-    dispatch(deleteStockAction(token, id))
+    console.log("clickec" , id);
+    dispatch(deleteStockAction(userDetails?.token, id))
     .then(() => {
       // After successful deletion, refetch data
-      dispatch(getStockAction(token, firmId));
-      dispatch(getCategoriesAction(token, firmId));
+      dispatch(getStockAction(userDetails?.token, firmId));
+      dispatch(getCategoriesAction(userDetails?.token, firmId));
     })
     .catch((error) => {
       console.error(error);
@@ -162,7 +167,6 @@ const Items = () => {
   return (
     <>
       <Company_name company_name={Company.name} />
-
       <Flex>
         <Slidebar />
         <Box margin={"auto"} marginTop="20px" overflow={"hidden"} width="80%">
@@ -173,7 +177,7 @@ const Items = () => {
               <MenuButton as={Button} backgroundColor='gray.100' margin="10px" px="4"
                 rightIcon={<ChevronDownIcon />}
               >
-                category
+               Select Category
               </MenuButton>
               <MenuList>
                 {Categories.categories.length > 0 ? Categories?.categories.map((category, id) => (
@@ -234,17 +238,19 @@ const Items = () => {
               <Tbody>
                 {filteredProducts?.map((data) => (
                   <Tr key={data._id}>
-                    <Td>{data._id}</Td>
-                    <Td>{data.name}</Td>
-                    <Td>{data.brand}</Td>
-                    <Td>{data.stockQuantity}</Td>
-                    <Td>{data.cost}</Td>
-                    <Td>{data.price}</Td>
-                    <Td>{data.supplier}</Td>
-                    <Td>{data.manufactureDate}</Td>
-                    <Td>{data.expiryDate}</Td>
-                    <Td>{data.description}</Td>
-                    <Td>
+                    <Td>{data?._id}</Td>
+                    <Td>{data?.name}</Td>
+                    <Td>{data?.brand}</Td>
+                    <Td>{data?.stockQuantity}</Td>
+                    <Td>{data?.cost}</Td>
+                    <Td>{data?.price}</Td>
+                    <Td>{data?.supplier}</Td>
+                    {/* <Td>{data?.manufactureDate}</Td> */}
+                    <Td>{moment(data?.manufactureDate).format("DD/MM/YY")}</Td>
+                    <Td>{moment(data?.expiryDate).format("DD/MM/YY")}</Td>
+                    <Td>{data?.gstRate}%</Td>
+                    <Td>{data?.description}</Td>
+                    <Td display={"flex"} gap={"8px"} align="center">
                       <Link><FaEdit /></Link>
                       <Link>more</Link>
                       <Link onClick={() => {handleDelete(data._id)}}><FaTrash /></Link>
@@ -272,7 +278,7 @@ const Items = () => {
                   <Input
                     type="text"
                     placeholder="Item Name"
-                    value={form.name}
+                    value={form?.name}
                     name="name"
                     onChange={handleChangeItems}
                   />
@@ -281,9 +287,10 @@ const Items = () => {
                   <FormLabel>Item ID :</FormLabel>
                   <Input
                     type="text"
-                    placeholder="Item Name"
-                    value={form._id}
-                    name="name"
+                    disabled={true}
+                    placeholder="Item Id"
+                    value={form?.firmId}
+                    name="firmId"
                     onChange={handleChangeItems}
                   />
                 </FormControl>
@@ -349,6 +356,7 @@ const Items = () => {
                     type="number"
                     placeholder="select gst Rate"
                     onChange={handleChangeItems}
+                    name="gstRate"
                   >
                     <option value={0}>0%</option>
                     <option value={3}>3%</option>
@@ -364,8 +372,8 @@ const Items = () => {
                   <FormLabel>Manufacture Date:</FormLabel>
                   <Input
                     type="date"
-                    placeholder="expiryDate"
-                    value={form.manufactureDate}
+                    placeholder="manufactureDate"
+                    value={form?.manufactureDate}
                     name="manufactureDate"
                     onChange={handleChangeItems}
                   />
@@ -375,7 +383,7 @@ const Items = () => {
                   <Input
                     type="date"
                     placeholder="expiryDate"
-                    value={form.expiryDate}
+                    value={form?.expiryDate}
                     name="expiryDate"
                     onChange={handleChangeItems}
                   />

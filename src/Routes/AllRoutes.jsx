@@ -157,6 +157,7 @@ import AddPurchase from '../components/After Login/Billing App/Purchase/Purchase
 import AddPurchaseReturn from '../components/After Login/Billing App/Purchase/Purchase_Return/AddPurchaseReturn'
 import AddPaymentOut from '../components/After Login/Billing App/Purchase/Payment_Out/AddPaymentOut'
 import AddPurchaseOrder from '../components/After Login/Billing App/Purchase/Purchase_Order/AddPurchaseOrder'
+import SoftwareCompanyRegister from '../components/After Login/Profile/SoftwareCompanyRegister'
 
 export default function AllRoutes() {
     return (
@@ -248,6 +249,7 @@ export default function AllRoutes() {
             {/* {<PrivateRoute>
             </PrivateRoute>} */}
             <Route element={<Profile />} path="/Profile" ></Route>
+            <Route element={<SoftwareCompanyRegister />} path="/software-signup" ></Route>
             {/* <Route element={<Profile />} path="/Profile" ></Route> */}
             <Route element={<Inventory_Software />} path="/Inventory_Software" ></Route>
             {/* <Route element={<Inventiry_Home />} path="/Inventiry_Home" ></Route> */}

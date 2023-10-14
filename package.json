@@ -22,6 +22,7 @@
     "framer-motion": "^9.0.2",
     "image-to-base64": "^2.2.0",
     "jsbarcode": "^3.11.5",
+    "moment": "^2.29.4",
     "pako": "^2.1.0",
     "react": "^18.2.0",
     "react-calc": "^0.1.2",

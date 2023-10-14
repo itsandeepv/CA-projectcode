@@ -66,32 +66,44 @@ const Parties = () => {
   const modal1 = useDisclosure();
   const token = localStorage.getItem("token");
   const { firmId } = useSelector((store) => store.FirmRegistration);
-  console.log("🚀 ~ file: Parties.jsx:69 ~ Parties ~ firmId:", firmId)
+  // const FirmRegistration2 = useSelector((store) => store);
   const dispatch = useDispatch();
   const { getPartiesData } = useSelector((store) => store.partiesReducer);
   const { searchPartiesData } = useSelector((store) => store.partiesReducer);
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredData, setFilteredData] = useState(getPartiesData);
+  const [filteredData, setFilteredData] = useState();
+  
+  console.log(":", firmId ,getPartiesData)
+  useEffect(()=>{
+    setFilteredData([...getPartiesData])
+  },[getPartiesData])
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
-    setFilteredData(getPartiesData.filter((data) =>
-      data.partyName.toLowerCase().includes(searchQuery.toLowerCase())
-    ))
-    dispatch(searchParty(e.target.value, token, firmId))
+    if(searchQuery != ""){
+      setFilteredData(getPartiesData?.filter((data) =>
+        data.partyName.toLowerCase().includes(searchQuery.toLowerCase())
+      ))
+      // dispatch(searchParty(e.target.value, token, firmId))
+    }else{
+      setFilteredData(getPartiesData)
+    }
   }
+
+const userDetails = JSON.parse(sessionStorage.getItem("userDetails")) ?JSON.parse(sessionStorage.getItem("userDetails")):null
+  // console.log(  userDetails?.token , "<<<<<<<")
 
   const [form, setForm] = useState({
     partyName: "",
-    GSTNo: "",
+    gstNo: "",
     phoneNumber: "",
-    GSTType: "",
+    gstType: "",
     state: "",
     email: "",
     billingAddress: "",
     shippingAddress: "",
   });
-
+  
 
   const handleChangeParty = (e) => {
     e.preventDefault();
@@ -100,7 +112,7 @@ const Parties = () => {
   };
 
   const handleAddParty = () => {
-    dispatch(postPartiesAction(form, token, firmId));
+    dispatch(postPartiesAction(form, userDetails?.token, firmId));
     modal1.onClose();
   };
 
@@ -110,13 +122,13 @@ const Parties = () => {
   //   }
 
   useEffect(() => {
-    dispatch(getPartiesAction(token, firmId));
+    dispatch(getPartiesAction(userDetails?.token, firmId));
   }, [firmId]);
 
   console.log("I AM HERE", getPartiesData);
 
   // validate gst no.
-  const isValidGSTNo = (gstNo) => {
+  const isValidgstNo = (gstNo) => {
     const gstPattern = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[0-9A-Z]{1}[Z]{1}[0-9A-Z]{1}$/;
     return gstPattern.test(gstNo);
   }
@@ -176,8 +188,7 @@ const Parties = () => {
                     .filter((data) => {
                       // Your filtering logic here based on the search query
                       return data.partyName.toLowerCase().includes(searchQuery.toLowerCase());
-                    })
-                    .map((filteredData) => (
+                    })?.map((filteredData) => (
                       <Tr key={filteredData._id} onClick={() => handleRowClick(filteredData._id)} style={{ cursor: 'pointer' }}>
                         <Td isNumeric style={{ border: '1px solid gray' }}>{filteredData._id}</Td>
                         <Td style={{ border: '1px solid gray' }}>{filteredData.partyName}</Td>
@@ -188,7 +199,7 @@ const Parties = () => {
                     ))
                 ) : (
                   // Render normal data when there's no search query
-                  filteredData.map((data) => (
+                  filteredData?.map((data) => (
                     <Tr key={data._id} onClick={() => handleRowClick(data._id)} style={{ cursor: 'pointer' }}>
                       <Td isNumeric style={{ border: '1px solid gray' }}>{data._id}</Td>
                       <Td style={{ border: '1px solid gray' }}>{data.partyName}</Td>
@@ -250,12 +261,12 @@ const Parties = () => {
                   <Input
                     type="text"
                     placeholder="GST NO"
-                    value={form.GSTNo}
-                    name="GSTNo"
+                    value={form.gstNo}
+                    name="gstNo"
                     onChange={handleChangeParty}
-                    isInvalid={!isValidGSTNo(form.GSTNo) && form.GSTNo !== ""}
+                    isInvalid={!isValidgstNo(form.gstNo) && form.gstNo !== ""}
                   />
-                  {!isValidGSTNo(form.GSTNo) && form.GSTNo !== "" && (
+                  {!isValidgstNo(form.gstNo) && form.gstNo !== "" && (
                     <FormErrorMessage>Please enter a valid GST number</FormErrorMessage>
                   )}
                 </FormControl>
@@ -263,7 +274,7 @@ const Parties = () => {
                   <FormLabel>GST Type :</FormLabel>
                   <Select
                     placeholder="GST Type"
-                    name="GSTType"
+                    name="gstType"
                     onChange={handleChangeParty}
                   >
                     <option value="c_gst">cgst</option>

@@ -44,7 +44,7 @@ const SignUp = () => {
     email: "",
     password: "",
     fullName: "",
-    username: "",
+    userName: "",
     phoneNumber: "",
   });
 
@@ -158,12 +158,12 @@ const SignUp = () => {
                 onChange={handleChange}
               />
             </FormControl>
-            <FormControl id="username">
+            <FormControl >
               <FormLabel>User Name</FormLabel>
               <Input
                 type="text"
-                name="username"
-                value={form.username}
+                name="userName"
+                value={form.userName}
                 onChange={handleChange}
               />
             </FormControl>

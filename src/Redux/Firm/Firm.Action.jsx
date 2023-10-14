@@ -1,6 +1,7 @@
 // Firm.Action.js
 import axios from "axios";
 import { ERROR_FIRM_REGISTER, LOADING_FIRM_REGISTER, SET_FIRM_ID, SET_FIRM_NAME, SUCCESS_FIRM_REGISTER, SUCCESS_GET_FIRM_REGISTER } from "./Firm.Type";
+import { LIVE_URL2, localurl } from "../config/Commen";
 
 
 
@@ -14,7 +15,7 @@ export const  getFirmData = (token) => (dispatch) => {
     dispatch({ type: LOADING_FIRM_REGISTER });
 
      axios.get(
-        `https://tax-service.onrender.com/firm_registration`,
+        `${LIVE_URL2}/firm_registration`,
         { headers }
       )
         .then(res => {
@@ -31,7 +32,7 @@ export const  getFirmData = (token) => (dispatch) => {
 
 
 export const firmRegisterAction = (formData, token) => (dispatch) => {
-    console.log(formData, "token", token);
+    // console.log(formData, "token", token);
     const headers = {
         'Content-Type': 'application/json',
         'token': `${token}`
@@ -39,13 +40,14 @@ export const firmRegisterAction = (formData, token) => (dispatch) => {
 
     dispatch({ type: LOADING_FIRM_REGISTER });
 
-    axios.post(`https://tax-service.onrender.com/firm_registration`, formData, { headers })
+    axios.post(`${LIVE_URL2}/firm_registration`, formData, { headers })
         .then(res => {
             dispatch({ type: SUCCESS_FIRM_REGISTER, payload: res.data });
-            console.log(res);
+            // console.log(res);
             if (res.status === 201) {
                 alert("Successfully registered") 
                 dispatch(getFirmData(token)) 
+                window.location = "/HomeDash"
             }
         })
         .catch(err => {

@@ -8,6 +8,7 @@ import {
   getInduvidualPartiesAction
 } from "../../../../Redux/Parties/parties.action";
 import { useParams } from 'react-router-dom';
+import { userDetails } from '../../../../Redux/config/Commen';
 
 const PartyInvoice = () => {
   const Company = {
@@ -52,9 +53,10 @@ const PartyInvoice = () => {
 
   const totalPaidAmount = calculateTotal("paidAmount");
   const totalDueAmount = calculateTotal("dueAmount");
+  // const userDetails = JSON.parse(sessionStorage.getItem("userDetails")) ?JSON.parse(sessionStorage.getItem("userDetails")):null
 
   useEffect(() => {
-    dispatch(getInduvidualPartiesAction(token, firmId , id));
+    dispatch(getInduvidualPartiesAction(userDetails?.token, firmId , id));
   }, [firmId]);
 
   return (

@@ -130,11 +130,10 @@ const Company_name = (ppx) => {
 
   const handleChange = (e) => {
     const { value } = e.target;
-  
     const selectedFirm = get_firm_data.find((firm) => firm._id === value);
     const selectedCompanyName = selectedFirm ? selectedFirm.companyName : "";
     const companyLogo = selectedFirm ? selectedFirm.companyLogo : "";
-    console.log("🚀 ~ file: Company_name.jsx:137 ~ handleChange ~ companyLogo:", companyLogo)
+    console.log("🚀  companyLogo:", companyLogo ,value)
   
     setCompanyName(selectedCompanyName) // update heading
     setForm({ ...form, companyName: selectedCompanyName });
@@ -148,11 +147,12 @@ const Company_name = (ppx) => {
     handleImages();
   }, [images]);
 
+  const userDetails = JSON.parse(sessionStorage.getItem("userDetails")) ?JSON.parse(sessionStorage.getItem("userDetails")):null
+
   useEffect(() => {
-    
-    dispatch(getFirmData(token));
+    dispatch(getFirmData(userDetails?.token));
   }, [firmId]);
-  console.log(firmId)
+  // console.log(firmId)
 
   return (
     <>
@@ -324,7 +324,7 @@ const Company_name = (ppx) => {
                   {console.log('firm data', get_firm_data)}
                 </Select>
                 <Select placeholder="select financial year"
-                  onChange={handleChange}
+                  // onChange={handleChange}
                 >
                   {FYData?.map((FY)=>(
                     <option>{FY.year}</option>

@@ -6,7 +6,7 @@ export const LoginAction = (creds, navigate) => (dispatch) => {
   dispatch({ type: LOADING_LOGIN });
 
   axios
-    .post(`${LIVE_URL2}/loginreg/login`, creds)
+    .post(`${LIVE_URL2}/signin`, creds)
     .then((res) => {
       dispatch({ type: SUCCESS_LOGIN, payload: res });
       if (res.status === 200) {

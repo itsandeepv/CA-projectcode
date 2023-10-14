@@ -11,17 +11,19 @@ import {
   SEARCH_PARTIES,
   
 } from "./parties.types";
+import { LIVE_URL2 } from "../config/Commen";
 
 export const getPartiesAction = (token, firmId) => (dispatch) => {
   const headers = {
     token: `${token}`,
   };
   dispatch({ type: LOADING_PARTIES });
+  //${LIVE_URL2}/${firmId}/party
   try {
-    const url = `https://tax-service.onrender.com/${firmId}/party`;
+    const url = `${LIVE_URL2}/${firmId}/party`;
     axios.get(url, { headers }).then((res) => {
       dispatch({ type: GET_PARTIES, payload: res.data.party });
-      console.log("abcd", res.data.party);
+      // console.log("abcd", res.data);
     });
   } catch (error) {
     console.log(error);
@@ -35,10 +37,10 @@ export const getInduvidualPartiesAction = (token, firmId , id) => (dispatch) => 
   };
   dispatch({ type: LOADING_PARTIES });
   try {
-    const url = `https://tax-service.onrender.com/${firmId}/party/${id}`;
+    const url = `${LIVE_URL2}/${firmId}/party/${id}`;
     axios.get(url, { headers }).then((res) => {
       dispatch({ type: INDUVIDUAL_PARTY, payload: res.data.party });
-      console.log("abcd", res.data.party);
+      console.log("abcd", res.data);
     });
   } catch (error) {
     console.log(error);
@@ -50,13 +52,16 @@ export const postPartiesAction = (creds, token, firmId) => (dispatch) => {
   const headers = {
     token: `${token}`,
   };
+
+  console.log(firmId ,"<<<<firmId");
   dispatch({ type: LOADING_PARTIES });
+  //https://tax-service.onrender.com/${firmId}/party
   try {
-    const url = `https://tax-service.onrender.com/${firmId}/party`;
+    const url = `${LIVE_URL2}/${firmId}/party`;
     axios.post(url, creds, { headers }).then((res) => {
       dispatch({ type: SUCCESS_PARTIES, payload: res.data });
-      console.log(res);
-      if (res.status === 200) {
+      // console.log(res);
+      if (res.status === 201) {
         alert("party register success");
         dispatch(getPartiesAction(token, firmId));
       }
@@ -73,10 +78,10 @@ export const updatePartiesAction = (creds, token) => (dispatch) => {
   };
   dispatch({ type: LOADING_PARTIES });
   try {
-    const url = `https://tax-service.onrender.com/party/id`;
+    const url = `${LIVE_URL2}/party/id`;
     axios.put(url, creds, { headers }).then((res) => {
       dispatch({ type: UPDATE_PARTIES, payload: res.data });
-      console.log(res);
+      // console.log(res);
     });
   } catch (error) {
     console.log(error);
@@ -90,10 +95,10 @@ export const searchParty = (partyName, token , firmId) => (dispatch) => {
   };
   dispatch({ type: LOADING_PARTIES });
   try {
-    const url = `https://tax-service.onrender.com/${firmId}/party/search?name=${partyName}`;
+    const url = `${LIVE_URL2}/${firmId}/party/search?name=${partyName}`;
     axios.put(url, partyName, { headers }).then((res) => {
       dispatch({ type: SEARCH_PARTIES, payload: res.data });
-      console.log(res);
+      // console.log(res);
     });
   } catch (error) {
     console.log(error);
@@ -107,7 +112,7 @@ const headers={
 }
     dispatch({ type: LOADING_PARTIES });
     try {
-      const url=`https://tax-service.onrender.com/party/${id}`
+      const url=`${LIVE_URL2}/party/${id}`
       axios.post(url,{ headers }).then((res) => {
         dispatch({ type: DELETE_PARTIES, payload: res.data.party });
            console.log("del::::",res.data.party)
