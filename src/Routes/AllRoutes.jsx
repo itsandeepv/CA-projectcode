@@ -158,9 +158,13 @@ import AddPurchaseReturn from '../components/After Login/Billing App/Purchase/Pu
 import AddPaymentOut from '../components/After Login/Billing App/Purchase/Payment_Out/AddPaymentOut'
 import AddPurchaseOrder from '../components/After Login/Billing App/Purchase/Purchase_Order/AddPurchaseOrder'
 import SoftwareCompanyRegister from '../components/After Login/Profile/SoftwareCompanyRegister'
-
+import { ToastContainer, toast } from 'react-toastify';
+  import 'react-toastify/dist/ReactToastify.css';
 export default function AllRoutes() {
     return (
+        <>
+        
+            <ToastContainer/>
         <Routes>
             <Route element={<Home />} path="/" ></Route>
             <Route element={<Buisness />} path="/buisness" ></Route>
@@ -323,5 +327,7 @@ export default function AllRoutes() {
             <Route element={<AddPurchaseOrder />} path='/add-purchase-order' />
             <Route element={<AddPurchaseReturn />} path='add-purchase-return' />
         </Routes>
+        </>
+
     );
 }; 

@@ -3,6 +3,9 @@ import { Box, Button, VStack, Heading, Input, FormControl, FormLabel, Checkbox, 
 import b2b2 from '../assets/b2b2.svg';
 import { useNavigate } from 'react-router-dom';
 import Navbar_AL from '../Navbar_AL';
+import { postRequest } from '../helpers/Services';
+import { userDetails } from '../../Redux/config/Commen';
+import { toast } from 'react-toastify';
 
 const SoftwareLogin = () => {
     const [form, setForm] = useState({ email: "", password: "" });
@@ -15,12 +18,32 @@ const SoftwareLogin = () => {
         setForm({ ...form, [name]: value });
     }
 
-    const LogInHandle = () => {
+
+
+
+    const LogInHandle = async () => {
         if (!form.email || !form.password) {
             return alert('Please Fill All the fields');
         }
+
+        await postRequest("/companyRegister/signin" ,form ,userDetails?.token).then((res)=>{
+            console.log(res , "<<<<");
+            if(res.status == 200){
+              toast.success("Company login successfully ")
+              sessionStorage.setItem("companyDetails" , JSON.stringify(res.data))
+              setTimeout(() => {
+                  navigate('/homeDash'); // Navigate on success
+              }, 3000);
+            }
+          }).catch((err)=>{
+            console.log(err , "<<");
+            if(err?.response?.data?.message){
+              toast.error(err?.response?.data?.message)
+            }else{
+              toast.error(err?.message)
+            }
+          })
         // Simulate successful login
-        navigate('/homeDash'); // Navigate on success
     }
 
     const openModal = () => {
@@ -69,7 +92,7 @@ const SoftwareLogin = () => {
                         onClick={LogInHandle}>
                         Sign In
                     </Button>
-                    <Link color={'blue.400'} href="/AddCompanyForm">Don't have an account? Sign Up</Link>
+                    <Link color={'blue.400'} href="/software-signup">Don't have an account? Sign Up</Link>
                     <Button
                         mt={4}
                         colorScheme="green"

@@ -29,6 +29,10 @@ import {
 } from '@chakra-ui/react'
 import { Link } from "react-router-dom";
 import Slidebar from '../../Slidebar/Slidebar';
+import { deleteRequest, getRequest, postRequest } from "../../../../helpers/Services";
+import { userDetails } from "../../../../../Redux/config/Commen";
+import { toast } from "react-toastify";
+import { useEffect } from "react";
 
 
 const PaymentIn = () => {
@@ -64,11 +68,40 @@ const PaymentIn = () => {
 
 
 
-  const initialData = [{ date: '2022-05-01', refNo: '001', partyName: 'ABC Company', categoryName: 'Furniture', type: 'Sale', total: 5000, received: 2000, balance: 3000, }, { date: '2022-05-02', refNo: '002', partyName: 'XYZ Company', categoryName: 'ElecTronics', type: 'Purchase', total: 10000, received: 5000, balance: 5000, },];
+  const initialData = [{
+    date: '2022-05-01',
+    ref_no: '001',
+    party_name: 'ABC Company',
+    category_name: 'Furniture',
+    type: 'Sale',
+    total: 5000,
+    recived: 2000,
+    balance: 3000,
+  }, { date: '2022-05-02', ref_no: '002', party_name: 'XYZ Company', category_name: 'ElecTronics', type: 'Purchase', total: 10000, recived: 5000, balance: 5000, },];
 
 
   const [data, seTdata] = useState(initialData);
+  const fetchData = async () => {
+    const res = await getRequest("/addPayment/payment", userDetails?.token)
+    if (res.status == 200) {
+      // console.log(res , "<<<");
+      seTdata(res?.data?.paymentAll)
+    }
+  }
+  useEffect(() => {
+    fetchData()
+  }, [])
 
+  const [newRowData, setNewRowData] = useState({
+    date: '2022-05-01',
+    ref_no: '001',
+    party_name: 'ABC Company',
+    category_name: 'Furniture',
+    type: 'Sale',
+    total: 5000,
+    recived: 2000,
+    balance: 3000,
+  });
 
 
   const handleChange = (event, index, field) => {
@@ -76,15 +109,24 @@ const PaymentIn = () => {
     newData[index][field] = event.target.value;
     seTdata(newData);
 
+    const { name, value } = event.target;
+    setNewRowData({ ...newRowData, [name]: value });
+
+    console.log(newRowData, "<<<<");
 
   };
+
   const totalAmount = data.reduce((total, sale) => {
     return total + sale.total;
   }, 0);
-  const handleDelete = (index) => {
-    const newData = [...data];
-    newData.splice(index, 1);
-    seTdata(newData);
+  const handleDelete = async (index ,id) => {
+    const res = await deleteRequest(`/addPayment/payment/${id}`,userDetails?.token)
+    if(res?.status == 200){
+      toast.success("Item delated success")
+      const newData = [...data];
+      newData.splice(index, 1);
+      seTdata(newData);
+    }
 
   };
 
@@ -101,9 +143,16 @@ const PaymentIn = () => {
 
 
 
-  const handleAddRow = () => {
-    const newRow = { id: data.lengTh + 1, date: '', refNo: '', partyName: '', categoryName: '', type: '', total: 0, received: 0, balance: 0 };
+  const handleAddRow = async () => {
+    const newRow = { id: data.lengTh + 1, date: '', ref_no: '', party_name: '', category_name: '', type: '', total: 0, recived: 0, balance: 0 };
     seTdata([...data, newRow]);
+    const res = await postRequest("/addPayment/payment", newRowData, userDetails?.token)
+    if (res.status == 200) {
+      toast.success(res.data?.message)
+    } else {
+      toast.error("Internal server error !")
+    }
+    // console.log(res, "<<<<");
 
   };
 
@@ -116,7 +165,7 @@ const PaymentIn = () => {
       <Flex w="100%" >
         <Slidebar />
         <Box w="80%" m={"auto"} marginTop={"20px"}>
-        <Heading> Payments </Heading>
+          <Heading> Payments </Heading>
           <HStack justifyContent={"space-between"} padding={"50px"} boxShadow="rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px">
             <HStack gap={"20px"} flexDirection={{ base: "column", md: "row", lg: "row" }}>
               <div>
@@ -152,7 +201,7 @@ const PaymentIn = () => {
           </HStack>
           {/* table */}
           <Box margin={"10px"}>
-            <Input type="text" placeholder="Search" onChange={handleChanges} mt='4'/>
+            <Input type="text" placeholder="Search" onChange={handleChanges} mt='4' />
             <TableContainer width={{ base: "100%", md: "100%", lg: "100%", }} mt='4'>
               <Table>
                 <Thead>
@@ -162,7 +211,7 @@ const PaymentIn = () => {
                     <Th>Type</Th>
                     <Th>Date</Th>
                     <Th>Ref No.</Th>
-                    <Th>Received</Th>
+                    <Th>recived</Th>
                     <Th>Balance</Th>
                     <Th>Total</Th>
                     <Th>Print</Th>
@@ -176,31 +225,36 @@ const PaymentIn = () => {
                         <input
                           style={{ width: '100px' }}
                           type="text"
-                          value={item.partyName}
-                          onChange={(event) => handleChange(event, index, 'partyName')}
+                          value={item.party_name}
+                          name="party_name"
+                          onChange={(event) => handleChange(event, index, 'party_name')}
                         />
                       </Td>
                       <Td>
                         <input
                           style={{ width: '100px' }}
                           type="text"
-                          value={item.categoryName}
-                          onChange={(event) => handleChange(event, index, 'categoryName')}
+                          name="category_name"
+                          value={item.category_name}
+                          onChange={(event) => handleChange(event, index, 'category_name')}
                         />
                       </Td>
                       <Td>
                         <select
                           value={item.type}
+                          name="type"
                           onChange={(event) => handleChange(event, index, 'type')}
                         >
+                          <option value="Sale">Select</option>
                           <option value="Sale">Sale</option>
                           <option value="Purchase">Purchase</option>
                         </select>
                       </Td>
                       <Td>
                         <input
-                        style={{ width: '110px' }}
+                          style={{ width: '110px' }}
                           type="date"
+                          name="date"
                           value={item.date}
                           onChange={(event) => handleChange(event, index, 'date')}
                         />
@@ -208,23 +262,27 @@ const PaymentIn = () => {
                       <Td>
                         <input
                           style={{ width: '80px' }}
-                          type="text"
-                          value={item.refNo}
-                          onChange={(event) => handleChange(event, index, 'refNo')}
+                          type="number"
+                          name="ref_no"
+                          value={item.ref_no}
+                          onChange={(event) => handleChange(event, index, 'ref_no')}
                         />
                       </Td>
                       <Td>
                         <input
                           style={{ width: '80px' }}
-                          type="text"
-                          value={item.received}
-                          onChange={(e) => handleChange(e, index, "received")}
+                          type="number"
+                          name="recived"
+
+                          value={item.recived}
+                          onChange={(e) => handleChange(e, index, "recived")}
                         />
                       </Td>
                       <Td>
                         <input
                           style={{ width: '80px' }}
-                          type="text"
+                          type="number"
+                          name="balance"
                           value={item.balance}
                           onChange={(e) => handleChange(e, index, "balance")}
                         />
@@ -233,6 +291,7 @@ const PaymentIn = () => {
                         <input
                           style={{ width: '80px' }}
                           type="number"
+                          name="total"
                           value={item.total}
                           onChange={(e) => handleChange(e, index, "total")}
                         />
@@ -241,7 +300,7 @@ const PaymentIn = () => {
                         <Button fontSize={"10px"} bg={"blue.400"} onClick={() => handlePrint(item)}>Print</Button>
                       </Td>
                       <Td>
-                        <Button fontSize={"10px"} bg={"red.500"} onClick={() => handleDelete(item)}>Delete</Button>
+                        <Button fontSize={"10px"} bg={"red.500"} onClick={() => handleDelete(item , item?._id)}>Delete</Button>
                       </Td>
 
 

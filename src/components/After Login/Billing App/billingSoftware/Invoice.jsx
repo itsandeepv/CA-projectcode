@@ -13,7 +13,7 @@ const Invoice = ({ formData, setFormData, handleInputChange }) => {
       </Heading>
       <Flex mb="2">
         <Text flex="0 0 120px">Invoice No:</Text>
-        <Input name="invoiceNo" flex="1" ml="2" size="sm" onChange={(e) => handleInputChange(e)} />
+        <Input name="invoiceNo"  type='number' flex="1" ml="2" size="sm" onChange={(e) => handleInputChange(e)} />
       </Flex>
       <Flex mb="2">
         <Text flex="0 0 120px">Date:</Text>

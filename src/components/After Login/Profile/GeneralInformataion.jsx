@@ -20,6 +20,10 @@ import {
 import { CalendarIcon, EditIcon } from '@chakra-ui/icons';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { useEffect } from 'react';
+import axios from 'axios';
+import { getRequest } from '../../helpers/Services';
+import { userDetails } from '../../../Redux/config/Commen';
 
 const GeneralInformation = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -27,6 +31,13 @@ const GeneralInformation = () => {
   const handleEditToggle = () => {
     setIsEditing((prev) => !prev);
   };
+
+  // console.log(userDetails ,"<<<");
+  
+  useEffect(()=>{
+    const res =  getRequest("/profile_get" ,userDetails?.token)
+    console.log(res , "<<<<");
+  },[])
 
   return (
     <Box bg="gray.100" p="4" minH="100vh" m='4'>

@@ -8,7 +8,7 @@ export const Inputvalidate = (inputNameArray, post, setErrors) => {
     const emailRE = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     inputNameArray?.map((item) => {
         if (item == "email") {
-            if (!post?.[item] || !post?.[item].trim()) {
+            if (!post?.[item] ) {
                 newError[item] = "Required";
                 positionFocus = positionFocus || item;
             } else if (!emailRE.test(post?.[item])) {
@@ -16,7 +16,7 @@ export const Inputvalidate = (inputNameArray, post, setErrors) => {
                 positionFocus = positionFocus || item;
             }
         } else {
-            if (!post?.[item] || !post?.[item].trim()) {
+            if (!post?.[item]) {
                 newError[item] = "Required";
                 positionFocus = positionFocus || item;
             }

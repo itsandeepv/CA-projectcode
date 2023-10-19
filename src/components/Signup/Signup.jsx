@@ -38,6 +38,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { AuthRegisterAction } from "../../Redux/Auth/Auth.Action";
+import { Inputvalidate } from "../helpers/inputValidate";
+import { hasValidationError, validationError } from "../helpers/Frontend";
 
 const SignUp = () => {
   const [form, setForm] = useState({
@@ -57,11 +59,12 @@ const SignUp = () => {
     setForm({ ...form, [name]: value });
   };
 
-  const inputNameArray = ["email", "password" ,"userName","phoneNumber","fullName"]
+  const inputNameArray = ["email", "password", "userName", "phoneNumber", "fullName"]
   const [errors, setErrors] = useState([]);
-  
+
   const handleRegister = (e) => {
-    dispatch(AuthRegisterAction(form, navigate));
+    if (!Inputvalidate(inputNameArray, form, setErrors)) { return; }
+    dispatch(AuthRegisterAction(form, navigate))
   };
 
   return (
@@ -152,7 +155,9 @@ const SignUp = () => {
                 value={form.email}
                 onChange={handleChange}
               />
+              {hasValidationError(errors, "email") ? (<span className="has-cust-error">{validationError(errors, "email")}</span>) : null}
             </FormControl>
+
             <FormControl id="fullname">
               <FormLabel>Full Name</FormLabel>
               <Input
@@ -161,6 +166,8 @@ const SignUp = () => {
                 value={form.fullName}
                 onChange={handleChange}
               />
+              {hasValidationError(errors, "fullName") ? (<span className="has-cust-error">{validationError(errors, "fullName")}</span>) : null}
+
             </FormControl>
             <FormControl >
               <FormLabel>User Name</FormLabel>
@@ -170,6 +177,8 @@ const SignUp = () => {
                 value={form.userName}
                 onChange={handleChange}
               />
+              {hasValidationError(errors, "userName") ? (<span className="has-cust-error">{validationError(errors, "userName")}</span>) : null}
+
             </FormControl>
             <FormControl id="phoneno">
               <FormLabel>Phone No.</FormLabel>
@@ -179,6 +188,7 @@ const SignUp = () => {
                 value={form.phoneNumber}
                 onChange={handleChange}
               />
+              {hasValidationError(errors, "phoneNumber") ? (<span className="has-cust-error">{validationError(errors, "phoneNumber")}</span>) : null}
             </FormControl>
             <FormControl id="password">
               <FormLabel>Password</FormLabel>
@@ -188,6 +198,8 @@ const SignUp = () => {
                 value={form.password}
                 onChange={handleChange}
               />
+              {hasValidationError(errors, "password") ? (<span className="has-cust-error">{validationError(errors, "password")}</span>) : null}
+
             </FormControl>
 
             <Stack spacing={10}>

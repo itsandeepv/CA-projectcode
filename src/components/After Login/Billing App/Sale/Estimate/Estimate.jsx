@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Box, Button, Flex, HStack, Image, Input, Select, Text, VStack, Wrap, Heading, List,
     ListItem,
@@ -30,6 +30,9 @@ import { Link } from "react-router-dom";
 import Slidebar from '../../Slidebar/Slidebar';
 
 import Company_name from '../../Company_name/Company_name';
+import { deleteRequest, getRequest, postRequest } from '../../../../helpers/Services';
+import { userDetails } from '../../../../../Redux/config/Commen';
+import { toast } from 'react-toastify';
 
 const Estimate = () => {
     const clientsData = [
@@ -47,6 +50,20 @@ const Estimate = () => {
     const [invoiceDate, setInvoiceDate] = useState("");
     const [supplyDate, setSupplyDate] = useState("");
 
+
+
+    
+
+    const { isOpen, onOpen } = useDisclosure();
+    const [imageURL, setImageURL] = useState("");
+
+
+   
+
+
+    // const handleRegisterFirm = () => {
+    //     dispatch(firmRegisterAction(formData, UserDetails?.token));
+    // };
     const handleSearchChange = (e) => {
         setSearchQuery(e.target.value);
     };
@@ -69,24 +86,29 @@ const Estimate = () => {
 
     ////
     const [tableData, setTableData] = useState([
-        { id: 1, item: 'Item 1', quantity: 1, unitPrice: 10, taxPercent: 10, amount: 11 },
-        { id: 2, item: 'Item 2', quantity: 2, unitPrice: 20, taxPercent: 10, amount: 44 },
-        { id: 3, item: 'Item 3', quantity: 3, unitPrice: 30, taxPercent: 10, amount: 99 },
+        { id: 1, item: 'Item 1', quantity: 1, per_unit_price: 10, tax: 10, amount: 11 },
+        { id: 2, item: 'Item 2', quantity: 2, per_unit_price: 20, tax: 10, amount: 44 },
+        { id: 3, item: 'Item 3', quantity: 3, per_unit_price: 30, tax: 10, amount: 99 },
     ]);
 
     const [newRowData, setNewRowData] = useState({
-        id: null,
+        id: userDetails?.userId,
         item: '',
         quantity: 0,
-        unitPrice: 0,
-        taxPercent: 0,
+        per_unit_price: 0,
+        tax: 0,
         amount: 0,
+        
     });
+
 
     const handleTableInputChange = (event, index, key) => {
         const newData = [...tableData];
         newData[index][key] = event.target.value;
         setTableData(newData);
+        const { name, value } = event.target;
+        setNewRowData({ ...newRowData, [name]: value });
+
     };
 
     const handleAddRow = () => {
@@ -94,20 +116,43 @@ const Estimate = () => {
         setTableData([...tableData, { ...newRowData, id: newId }]);
     };
 
-    const handleDeleteRow = (index) => {
+    const handleDeleteRow = async(index,id) => {
         const newData = [...tableData];
-        newData.splice(index, 1);
-        setTableData(newData);
+        const res = await deleteRequest(`/addEastimate/estimate/${id}`,userDetails?.token)
+        if(res?.status == 200){
+            newData.splice(index, 1);
+            setTableData(newData);
+            toast.success("Item delated Success")
+        }
+        // console.log(res , "<<<<");
+
     };
 
-    const handleSaveTableData = () => {
-        console.log(tableData);
-        // Perform save logic here
+    const handleSaveTableData = async () => {
+        // console.log(tableData);
+        const res = await postRequest("/addEastimate/estimate" ,newRowData ,userDetails?.token)
+        if(res.status == 200){
+            toast.success(res.data?.message)
+        }else{
+            toast.error("Internal server error !")
+        }
+        console.log(res , "<<<<");
+        
     };
 
-    const calculateAmount = (quantity, unitPrice, taxPercent) => {
-        const amount = quantity * unitPrice;
-        const taxAmount = (taxPercent / 100) * amount;
+    const fetchData = async ()=>{
+        const res = await getRequest("/addEastimate/estimate" ,userDetails?.token)
+        if(res.status ==200){
+            setTableData(res?.data?.deliverAll) 
+        }
+    }
+    useEffect(()=>{
+        fetchData()
+    },[])
+
+    const calculateAmount = (quantity, per_unit_price, tax) => {
+        const amount = quantity * per_unit_price;
+        const taxAmount = (tax / 100) * amount;
         return amount + taxAmount;
     };
     const calop = () => {
@@ -115,8 +160,8 @@ const Estimate = () => {
     }
     const calculateTotalEstimateAmount = () => {
         const estimateAmounts = tableData.map((row) => {
-            const amount = row.quantity * row.unitPrice;
-            const taxAmount = (row.taxPercent / 100) * amount;
+            const amount = row.quantity * row.per_unit_price;
+            const taxAmount = (row.tax / 100) * amount;
             return amount + taxAmount;
         });
         const totalEstimateAmount = estimateAmounts.reduce((total, amount) => total + amount, 0);
@@ -130,15 +175,10 @@ const Estimate = () => {
             <Company_name company_name={Company.name} />
 
             <Flex  >
-
                 <Slidebar />
-
-                
-
                 <Box width={"80%"} padding="10px" m={"auto"} marginTop={"20px"}>
                     <h1>Estimate Page</h1>
                     <Flex justifyContent={"space-between"} flexDirection={{
-
                         base: "column",
                         md: "row",
                         lg: "row"
@@ -243,23 +283,23 @@ const Estimate = () => {
                                 </Thead>
                                 <Tbody>
                                     {tableData.map((data, index) => (
-                                        <Tr key={data.id}>
-                                            <Td>{data.id}</Td>
+                                        <Tr key={data._id}>
+                                            <Td>{index + 1}</Td>
                                             <Td>
-                                                <input type="text" value={data.item} onChange={(e) => handleTableInputChange(e, index, 'item')} />
+                                                <input type="text" value={data.item} name='item' onChange={(e) => handleTableInputChange(e, index, 'item')} />
                                             </Td>
                                             <Td>
-                                                <input type="number" value={data.quantity} onChange={(e) => handleTableInputChange(e, index, 'quantity')} />
+                                                <input type="number" value={data.quantity}  name='quantity'  onChange={(e) => handleTableInputChange(e, index, 'quantity')} />
                                             </Td>
                                             <Td>
-                                                <input type="number" value={data.unitPrice} onChange={(e) => handleTableInputChange(e, index, 'unitPrice')} />
+                                                <input type="number" value={data.per_unit_price}  name='per_unit_price'  onChange={(e) => handleTableInputChange(e, index, 'per_unit_price')} />
                                             </Td>
                                             <Td>
-                                                <input type="number" value={data.taxPercent} onChange={(e) => handleTableInputChange(e, index, 'taxPercent')} />
+                                                <input type="number" value={data.tax}  name='tax'  onChange={(e) => handleTableInputChange(e, index, 'tax')} />
                                             </Td>
-                                            <Td> {calculateAmount(data.quantity, data.unitPrice, data.taxPercent)}</Td>
+                                            <Td> {calculateAmount(data.quantity, data.per_unit_price, data.tax)}</Td>
                                             <Td>
-                                                <button onClick={() => handleDeleteRow(index)}>Delete</button>
+                                                <button onClick={() => handleDeleteRow(index , data?._id)}>Delete</button>
                                             </Td>
                                         </Tr>
 

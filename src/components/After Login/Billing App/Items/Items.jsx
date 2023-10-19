@@ -40,6 +40,8 @@ import {
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import moment from "moment/moment";
+import { Inputvalidate } from "../../../helpers/inputValidate";
+import { hasValidationError, validationError } from "../../../helpers/Frontend";
 
 
 const Items = () => {
@@ -66,7 +68,7 @@ const Items = () => {
   const Categories = useSelector((store) => store.categoryReducer);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  console.log(":Categories" ,firmId)
+  console.log(":Categories", firmId)
 
   useEffect(() => {
     if (selectedCategories.length === 0) {
@@ -92,6 +94,7 @@ const Items = () => {
     cost: "",
     supplier: "",
     expiryDate: "",
+    unit:"",
     manufactureDate: "",
     gstRate: "",
     firmId: firmId
@@ -122,11 +125,14 @@ const Items = () => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
 
-    console.log(form ,"<<<<");
+    console.log(form, "<<<<");
   };
-  const userDetails = JSON.parse(sessionStorage.getItem("userDetails")) ?JSON.parse(sessionStorage.getItem("userDetails")):null
+  const userDetails = JSON.parse(sessionStorage.getItem("userDetails")) ? JSON.parse(sessionStorage.getItem("userDetails")) : null
+  const inputNameArray = ["name", "description", "category", "brand", "stockQuantity", "price", "cost", "supplier", "expiryDate", "manufactureDate", "gstRate", "firmId","unit"]
+  const [errors, setErrors] = useState([]);
 
   const handleItemsAdd = () => {
+    if (!Inputvalidate(inputNameArray, form, setErrors)) { return; }
     dispatch(postStockAction(form, userDetails?.token));
     modal1.onClose();
   };
@@ -152,17 +158,17 @@ const Items = () => {
     }
   };
 
-  const handleDelete = (id) =>{
-    console.log("clickec" , id);
+  const handleDelete = (id) => {
+    // console.log("clickec" , id);
     dispatch(deleteStockAction(userDetails?.token, id))
-    .then(() => {
-      // After successful deletion, refetch data
-      dispatch(getStockAction(userDetails?.token, firmId));
-      dispatch(getCategoriesAction(userDetails?.token, firmId));
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+      .then(() => {
+        // After successful deletion, refetch data
+        dispatch(getStockAction(userDetails?.token, firmId));
+        dispatch(getCategoriesAction(userDetails?.token, firmId));
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
   return (
     <>
@@ -177,7 +183,7 @@ const Items = () => {
               <MenuButton as={Button} backgroundColor='gray.100' margin="10px" px="4"
                 rightIcon={<ChevronDownIcon />}
               >
-               Select Category
+                Select Category
               </MenuButton>
               <MenuList>
                 {Categories.categories.length > 0 ? Categories?.categories.map((category, id) => (
@@ -187,8 +193,8 @@ const Items = () => {
                       checked={selectedCategories.includes(category.name)}
                     >
                       {category.name}
-                    </Checkbox>                  
-                    </MenuItem>
+                    </Checkbox>
+                  </MenuItem>
                 )) :
                   <MenuItem>
                     Not Found
@@ -253,7 +259,7 @@ const Items = () => {
                     <Td display={"flex"} gap={"8px"} align="center">
                       <Link><FaEdit /></Link>
                       <Link>more</Link>
-                      <Link onClick={() => {handleDelete(data._id)}}><FaTrash /></Link>
+                      <Link onClick={() => { handleDelete(data._id) }}><FaTrash /></Link>
                     </Td>
                   </Tr>
                 ))}
@@ -282,6 +288,8 @@ const Items = () => {
                     name="name"
                     onChange={handleChangeItems}
                   />
+                  {hasValidationError(errors, "name") ? (<span className="has-cust-error-white">{validationError(errors, "name")}</span>) : null}
+
                 </FormControl>
                 <FormControl margin={"10px"}>
                   <FormLabel>Item ID :</FormLabel>
@@ -293,6 +301,8 @@ const Items = () => {
                     name="firmId"
                     onChange={handleChangeItems}
                   />
+                  {hasValidationError(errors, "firmId") ? (<span className="has-cust-error-white">{validationError(errors, "firmId")}</span>) : null}
+
                 </FormControl>
               </Flex>
               <Flex>
@@ -305,6 +315,8 @@ const Items = () => {
                     name="brand"
                     onChange={handleChangeItems}
                   />
+                  {hasValidationError(errors, "brand") ? (<span className="has-cust-error-white">{validationError(errors, "brand")}</span>) : null}
+
                 </FormControl>
                 <FormControl margin={"10px"}>
                   <FormLabel>Unit :</FormLabel>
@@ -315,6 +327,9 @@ const Items = () => {
                     name="unit"
                     onChange={handleChangeItems}
                   />
+
+                  {hasValidationError(errors, "unit") ? (<span className="has-cust-error-white">{validationError(errors, "unit")}</span>) : null}
+
                 </FormControl>
               </Flex>
               <Flex>
@@ -327,6 +342,8 @@ const Items = () => {
                     name="cost"
                     onChange={handleChangeItems}
                   />
+                  {hasValidationError(errors, "cost") ? (<span className="has-cust-error-white">{validationError(errors, "cost")}</span>) : null}
+
                 </FormControl>
                 <FormControl margin={"10px"}>
                   <FormLabel>Selling Price :</FormLabel>
@@ -337,6 +354,8 @@ const Items = () => {
                     name="price"
                     onChange={handleChangeItems}
                   />
+                  {hasValidationError(errors, "price") ? (<span className="has-cust-error-white">{validationError(errors, "price")}</span>) : null}
+
                 </FormControl>
               </Flex>
               <Flex>
@@ -349,6 +368,8 @@ const Items = () => {
                     name="supplier"
                     onChange={handleChangeItems}
                   />
+                  {hasValidationError(errors, "supplier") ? (<span className="has-cust-error-white">{validationError(errors, "supplier")}</span>) : null}
+
                 </FormControl>
                 <FormControl margin={"10px"}>
                   <FormLabel> GST Rate:</FormLabel>
@@ -356,6 +377,7 @@ const Items = () => {
                     type="number"
                     placeholder="select gst Rate"
                     onChange={handleChangeItems}
+                    value={form.gstRate}
                     name="gstRate"
                   >
                     <option value={0}>0%</option>
@@ -365,6 +387,7 @@ const Items = () => {
                     <option value={18}>18%</option>
                     <option value={28}>28%</option>
                   </Select>
+                  {hasValidationError(errors, "gstRate") ? (<span className="has-cust-error-white">{validationError(errors, "gstRate")}</span>) : null}
                 </FormControl>
               </Flex>
               <Flex>
@@ -377,6 +400,8 @@ const Items = () => {
                     name="manufactureDate"
                     onChange={handleChangeItems}
                   />
+                  {hasValidationError(errors, "manufactureDate") ? (<span className="has-cust-error-white">{validationError(errors, "manufactureDate")}</span>) : null}
+
                 </FormControl>
                 <FormControl margin={"10px"}>
                   <FormLabel>Expiry Date:</FormLabel>
@@ -387,6 +412,8 @@ const Items = () => {
                     name="expiryDate"
                     onChange={handleChangeItems}
                   />
+                  {hasValidationError(errors, "expiryDate") ? (<span className="has-cust-error-white">{validationError(errors, "expiryDate")}</span>) : null}
+
                 </FormControl>
               </Flex>
               <Flex>
@@ -399,6 +426,8 @@ const Items = () => {
                     name="stockQuantity"
                     onChange={handleChangeItems}
                   />
+                  {hasValidationError(errors, "stockQuantity") ? (<span className="has-cust-error-white">{validationError(errors, "stockQuantity")}</span>) : null}
+
                 </FormControl>
                 <FormControl margin={"10px"}>
                   <FormLabel>Description :</FormLabel>
@@ -409,6 +438,8 @@ const Items = () => {
                     name="description"
                     onChange={handleChangeItems}
                   />
+                  {hasValidationError(errors, "description") ? (<span className="has-cust-error-white">{validationError(errors, "description")}</span>) : null}
+
                 </FormControl>
               </Flex>
             </ModalBody>

@@ -14,6 +14,8 @@ import {
   } from "../../../../Redux/Invoice/invoice.action";
 import { useParams } from 'react-router-dom'
 import { userDetails } from '../../../../Redux/config/Commen'
+import { Inputvalidate } from '../../../helpers/inputValidate'
+import { hasValidationError, validationError } from '../../../helpers/Frontend'
 
 const Company = {
     name: "Company Name"
@@ -25,7 +27,7 @@ const BillingSoftware = () => {
     const dispatch = useDispatch();
     const { getOneInvoice } = useSelector((store) => store.invoiceReducer);
     
-    console.log("🚀 ~ file: BillingSoftware.jsx:27 ~ BillingSoftware ~ getOneInvoice:", getOneInvoice)
+    // console.log("🚀 ~ file: BillingSoftware.jsx:27 ~ BillingSoftware ~ getOneInvoice:", getOneInvoice)
 
     const [formData, setFormData] = useState({
         soldToCustomerName: '',
@@ -75,11 +77,17 @@ const BillingSoftware = () => {
         console.log(name, value);
         setFormData({ ...formData, [name]: value });
         // setFormData({ ...formData, firmId: firmId });
-        console.log(firmId , "<<<<32AABCU9603R1ZW<");
+        // console.log(firmId , "<<<<32AABCU9603R1ZW<");
 
     };
 
+    const inputNameArray = ["soldToCustomerName","shipToCustomerName","soldToCustomerAddress","shipToCustomerAddress","customerEmail"
+    ,"subTotal","discount","finalAmount","invoiceNo","invoiceDate","paymentMode","gstNo","dueDate",
+        "items","paidAmount","dueAmount","firmId"]
+    const [errors, setErrors] = useState([]);
+  
     const submitInvoice = () => {
+        if (!Inputvalidate(inputNameArray, formData, setErrors)) { return; }
         dispatch(postInvoiceAction({...formData ,firmId:firmId} , firmId ,userDetails?.token))
     }
 
@@ -151,11 +159,13 @@ const BillingSoftware = () => {
                         >
                             <Flex justifyContent='space-around'>
                                 <Flex>
-                                    <Text fontSize='md' fontWeight='semibold' mr='2'>Paid Amount : </Text>
+                                    <Text fontSize='md' fontWeight='semibold' type='number' mr='2'>Paid Amount : </Text>
                                     <Input flex="1" ml="2" size="sm" name="paidAmount" onChange={handleInputChange} />
+
                                 </Flex>
+                                    {/* {hasValidationError(errors, "paidAmount") ? (<span className="has-cust-error-white">{validationError(errors, "paidAmount")}</span>) : null} */}
                                 <Flex>
-                                    <Text fontSize='md' fontWeight='semibold' mr='2'>Due Amount : </Text>
+                                    <Text fontSize='md' fontWeight='semibold' type='number' mr='2'>Due Amount : </Text>
                                     <Input flex="1" ml="2" size="sm" name="dueAmount" onChange={handleInputChange} />
                                 </Flex>
                             </Flex>
@@ -178,15 +188,15 @@ const BillingSoftware = () => {
                                     <Text flex="0 0 120px"
                                         alignItem='left'
                                     >Sub Total : </Text>
-                                    <Input flex="1" ml="2" size="sm" name="subTotal" value={formData?.subTotal} onChange={handleInputChange} />
+                                    <Input flex="1" ml="2" size="sm" type='number' name="subTotal" value={formData?.subTotal} onChange={handleInputChange} />
                                 </Flex>
                                 <Flex mb="2">
                                     <Text flex="0 0 120px">Discount : </Text>
-                                    <Input flex="1" ml="2" size="sm" name="discount"  value={formData?.discount} onChange={handleInputChange} />
+                                    <Input flex="1" ml="2" size="sm" type='number' name="discount"  value={formData?.discount} onChange={handleInputChange} />
                                 </Flex>
                                 <Flex mb="2">
                                     <Text flex="0 0 120px">Final Amount : </Text>
-                                    <Input flex="1" ml="2" size="sm" name="finalAmount"   value={formData?.finalAmount} onChange={handleInputChange} />
+                                    <Input flex="1" ml="2" size="sm" type='number' name="finalAmount"   value={formData?.finalAmount} onChange={handleInputChange} />
                                 </Flex>
                             </Flex>
                         </Flex>

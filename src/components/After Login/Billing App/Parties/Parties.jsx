@@ -56,7 +56,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { SearchIcon } from "@chakra-ui/icons";
-import { validateGstnumber } from "../../../helpers/inputValidate";
+import { Inputvalidate, validateGstnumber } from "../../../helpers/inputValidate";
 import { hasValidationError, validationError } from "../../../helpers/Frontend";
 
 
@@ -67,6 +67,7 @@ const Parties = () => {
   };
   const modal1 = useDisclosure();
   const { firmId } = useSelector((store) => store.FirmRegistration);
+  const responseData = useSelector((store) => store.FirmRegistration);
   // const FirmRegistration2 = useSelector((store) => store);
   const dispatch = useDispatch();
   const { getPartiesData } = useSelector((store) => store.partiesReducer);
@@ -74,7 +75,7 @@ const Parties = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredData, setFilteredData] = useState();
 
-  console.log(":", firmId, getPartiesData)
+  // console.log(":", responseData)
   useEffect(() => {
     setFilteredData([...getPartiesData])
   }, [getPartiesData])
@@ -114,16 +115,23 @@ const Parties = () => {
   };
 
   const inputNameArray = ["gstNo", "phoneNumber"]
-  
+
   const handleAddParty = () => {
 
-    if (!validateGstnumber(inputNameArray, {gstNo :form?.gstNo ,phoneNumber:form?.phoneNumber }, setErrors)) { return; }
-
-
+    if (!validateGstnumber(inputNameArray, { gstNo: form?.gstNo, phoneNumber: form?.phoneNumber }, setErrors)) { return; }
+    if (!Inputvalidate(["partyName", "GSTType", "state", "email", "shippingAddress", "phoneNumber", "gstNo", "billingAddress"], form, setErrors)) { return; }
     dispatch(postPartiesAction(form, userDetails?.token, firmId));
-    modal1.onClose();
-  };
+    // modal1.onClose();
 
+  };
+  useEffect(() => {
+
+    if (responseData.error) {
+      console.log(responseData);
+    } else {
+      modal1.onClose()
+    }
+  }, [responseData])
 
   //   const removeParty=(token,id,firmId)=>{
   //       dispatch(deletePartiesAction(token,id,firmId))
@@ -178,11 +186,11 @@ const Parties = () => {
           <TableContainer
             style={{ margin: '20px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}
           >
-{
-  searchQuery.length == 0 &&
-  <Text>Please click to logo and Select a company first</Text>
+            {
+              searchQuery.length == 0 &&
+              <Text>Please click to logo and Select a company first</Text>
 
-}
+            }
             <Table style={{ borderCollapse: 'collapse', width: '100%' }}>
               <Thead style={{ textAlign: 'center' }}>
                 <Tr>
@@ -263,6 +271,8 @@ const Parties = () => {
                     name="email"
                     onChange={handleChangeParty}
                   />
+                  {hasValidationError(errors, "email") ? (<span className="has-cust-error-white">{validationError(errors, "email")}</span>) : null}
+
                 </FormControl>
               </Flex>
 
@@ -281,7 +291,7 @@ const Parties = () => {
                   {!isValidgstNo(form.gstNo) && form.gstNo !== "" && (
                     <FormErrorMessage>Please enter a valid GST number</FormErrorMessage>
                   )}
-                {hasValidationError(errors, "gstNo") ? (<span className="has-cust-error-white">{validationError(errors, "gstNo")}</span>) : null}
+                  {hasValidationError(errors, "gstNo") ? (<span className="has-cust-error-white">{validationError(errors, "gstNo")}</span>) : null}
                 </FormControl>
 
                 <FormControl margin={"10px"}>
@@ -307,7 +317,7 @@ const Parties = () => {
                     name="phoneNumber"
                     onChange={handleChangeParty}
                   />
-                {hasValidationError(errors, "phoneNumber") ? (<span className="has-cust-error-white">{validationError(errors, "phoneNumber")}</span>) : null}
+                  {hasValidationError(errors, "phoneNumber") ? (<span className="has-cust-error-white">{validationError(errors, "phoneNumber")}</span>) : null}
                 </FormControl>
                 <FormControl margin={"10px"}>
                   <FormLabel>State :</FormLabel>
