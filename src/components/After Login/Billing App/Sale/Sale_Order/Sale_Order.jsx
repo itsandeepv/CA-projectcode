@@ -143,8 +143,6 @@ const Oreder_Sale = () => {
     return (
 
         <>
-
-
             <Flex  >
                 <Slidebar />
                 <Box width={"80%"} padding="10px" m={"auto"} marginTop={"20px"}>

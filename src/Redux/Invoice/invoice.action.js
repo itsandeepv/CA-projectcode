@@ -9,6 +9,7 @@ import {
   GET_ONE_INVOICE
 } from "./invoice.type";
 import { LIVE_URL2 } from "../config/Commen";
+import { toast } from "react-toastify";
 
 
 
@@ -21,13 +22,15 @@ export const postInvoiceAction = (creds, firmId, token) => (dispatch) => {
     const url = `${LIVE_URL2}/invoice/firm/${firmId}/saleinvoice`
     axios.post(url, creds, { headers }).then((res) => {
       dispatch({ type: SUCCESS_INVOICE, payload: res.data });
-      console.log(res);
+      // console.log(res);
       if (res.status === 201) {
-        alert(res.data.message);
+        toast.success(res.data.message)
+        window.location = "/Sale"
       }
     });
   } catch (error) {
     console.log(error);
+    toast.error(error?.message)
     dispatch({ type: ERROR_INVOICE, payload: error });
   }
 };

@@ -12,6 +12,7 @@ import {
   
 } from "./parties.types";
 import { LIVE_URL2 } from "../config/Commen";
+import { toast } from "react-toastify";
 
 export const getPartiesAction = (token, firmId) => (dispatch) => {
   const headers = {
@@ -26,8 +27,10 @@ export const getPartiesAction = (token, firmId) => (dispatch) => {
       // console.log("abcd", res.data);
     });
   } catch (error) {
-    console.log(error);
     dispatch({ type: ERROR_PARTIES, payload: error });
+    if(error.response.data?.message){
+      toast.error(error.response.data?.message)
+    }
   }
 };
 
@@ -43,7 +46,6 @@ export const getInduvidualPartiesAction = (token, firmId , id) => (dispatch) => 
       console.log("abcd", res.data);
     });
   } catch (error) {
-    console.log(error);
     dispatch({ type: ERROR_PARTIES, payload: error });
   }
 };
@@ -52,10 +54,7 @@ export const postPartiesAction = (creds, token, firmId) => (dispatch) => {
   const headers = {
     token: `${token}`,
   };
-
-  console.log(firmId ,"<<<<firmId");
   dispatch({ type: LOADING_PARTIES });
-  //https://tax-service.onrender.com/${firmId}/party
   try {
     const url = `${LIVE_URL2}/${firmId}/party`;
     axios.post(url, creds, { headers }).then((res) => {
@@ -67,8 +66,10 @@ export const postPartiesAction = (creds, token, firmId) => (dispatch) => {
       }
     });
   } catch (error) {
-    console.log(error);
     dispatch({ type: ERROR_PARTIES, payload: error });
+    if(error.response.data?.message){
+      toast.error(error.response.data?.message)
+    }
   }
 };
 
@@ -115,19 +116,16 @@ const headers={
       const url=`${LIVE_URL2}/party/${id}`
       axios.post(url,{ headers }).then((res) => {
         dispatch({ type: DELETE_PARTIES, payload: res.data.party });
-           console.log("del::::",res.data.party)
         dispatch(getPartiesAction(token, firmId));
-     
+
       });
     } catch (error) {
-      console.log(error);
       dispatch({ type: ERROR_PARTIES, payload: error });
+      if(error.response.data?.message){
+        toast.error(error.response.data?.message)
+      }
     }
   };
-
-
-
-
 
 
 export const setPartyId=(partyId)=>(dispatch)=>{

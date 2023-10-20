@@ -40,7 +40,7 @@ const Sale = () => {
     const { firmId } = useSelector((store) => store.FirmRegistration);
     const { getAllInvoice } = useSelector((store) => store.invoiceReducer);
     
-    console.log("🚀 ~ file: Sale.jsx:41 ~ Sale ~ firmId:", firmId ,getAllInvoice)
+    // console.log("🚀 ~ file: Sale.jsx:41 ~ Sale ~ firmId:", firmId ,getAllInvoice)
     const dispatch = useDispatch();
     const navigate = useNavigate();
 

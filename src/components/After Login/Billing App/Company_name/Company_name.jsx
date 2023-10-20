@@ -144,14 +144,13 @@ const Company_name = (ppx) => {
   useEffect(() => {
     setTimeout(() => {
       if (get_firm_data?.length > 0) {
-        
         const selectedFirm = get_firm_data[0];
         const selectedCompanyName = selectedFirm ? selectedFirm.companyName : "";
         const companyLogo = selectedFirm ? selectedFirm.companyLogo : "";
         setCompanyName(selectedCompanyName) // update heading
         setForm({ ...form, companyName: selectedCompanyName });
   
-        console.log(selectedFirm ,"<<<<" ,firmId)
+        // console.log(selectedFirm ,"<<<<" ,firmId)
   
         dispatch(setFirmId(get_firm_data[0]?._id));
         dispatch(setFirmName(selectedCompanyName));

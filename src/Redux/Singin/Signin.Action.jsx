@@ -1,6 +1,7 @@
 import axios from "axios";
 import { ERROR_LOGIN, LOADING_LOGIN, SUCCESS_LOGIN } from "./Signin.Type";
 import { LIVE_URL2 } from "../config/Commen";
+import { toast } from "react-toastify";
 
 export const LoginAction = (creds, navigate) => (dispatch) => {
   dispatch({ type: LOADING_LOGIN });
@@ -10,16 +11,15 @@ export const LoginAction = (creds, navigate) => (dispatch) => {
     .then((res) => {
       dispatch({ type: SUCCESS_LOGIN, payload: res });
       if (res.status === 200) {
-        alert("Login success");
+        toast.success("Login success")
         // console.log(res.data.data, "<<<res.data.data");
         navigate("/Inventory_Software");
       }
-    })
-
-    .catch((err) => {
+    }).catch((err) => {
       dispatch({ type: ERROR_LOGIN, payload: err });
-      // console.log("error : ", err.response.data.message)
-      alert(err.response.data.message);
+      if(err.response.data?.message){
+        toast.error(err.response.data?.message)
+      }
       // console.log(err);
     });
 };

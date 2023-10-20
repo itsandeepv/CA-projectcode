@@ -8,6 +8,7 @@ import {
   UPDATE_STOCKS,
 } from "./stock.types";
 import { LIVE_URL2 } from "../config/Commen";
+import { toast } from "react-toastify";
 
 export const getStockAction = (token, firmId) => (dispatch) => {
   const headers = {
@@ -39,14 +40,16 @@ export const postStockAction = (creds, token) => (dispatch) => {
       dispatch({ type: SUCCESS_STOCKS, payload: res.data });
       // console.log(res);
       if (res.status === 201) {
-        alert("Item added successfully");
+        toast.success("Item added successfully")
+        // alert();
         dispatch(getStockAction(token, creds?.firmId));
       }
     })
     .catch((error) => {
-      console.log(error);
       dispatch({ type: ERROR_STOCKS, payload: error });
-      alert(error.response.data.message);
+      if(error.response?.data?.message){
+        toast.error(error.response.data?.message)
+      }
     });
 };
 

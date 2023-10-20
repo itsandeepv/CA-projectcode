@@ -77,7 +77,7 @@ const BillingSoftware = () => {
         console.log(name, value);
         setFormData({ ...formData, [name]: value });
         // setFormData({ ...formData, firmId: firmId });
-        // console.log(firmId , "<<<<32AABCU9603R1ZW<");
+        console.log(formData , "<<<<32AABCU9603R1ZW<");
 
     };
 
@@ -87,7 +87,7 @@ const BillingSoftware = () => {
     const [errors, setErrors] = useState([]);
   
     const submitInvoice = () => {
-        if (!Inputvalidate(inputNameArray, formData, setErrors)) { return; }
+        if (!Inputvalidate(inputNameArray, {...formData ,firmId:firmId}, setErrors)) { return; }
         dispatch(postInvoiceAction({...formData ,firmId:firmId} , firmId ,userDetails?.token))
     }
 
