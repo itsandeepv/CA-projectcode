@@ -164,7 +164,9 @@ export default function AllRoutes() {
     return (
         <>
         
-            <ToastContainer/>
+            <ToastContainer
+            position='top-center'
+            />
         <Routes>
             <Route element={<Home />} path="/" ></Route>
             <Route element={<Buisness />} path="/buisness" ></Route>

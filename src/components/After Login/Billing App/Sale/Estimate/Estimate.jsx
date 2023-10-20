@@ -135,9 +135,7 @@ const Estimate = () => {
             toast.success(res.data?.message)
         }else{
             toast.error("Internal server error !")
-        }
-        console.log(res , "<<<<");
-        
+        }        
     };
 
     const fetchData = async ()=>{
@@ -297,7 +295,7 @@ const Estimate = () => {
                                             <Td>
                                                 <input type="number" value={data.tax}  name='tax'  onChange={(e) => handleTableInputChange(e, index, 'tax')} />
                                             </Td>
-                                            <Td> {calculateAmount(data.quantity, data.per_unit_price, data.tax)}</Td>
+                                            <Td> {calculateAmount(Number(data?.quantity), Number(data?.per_unit_price), Number(data?.tax))}</Td>
                                             <Td>
                                                 <button onClick={() => handleDeleteRow(index , data?._id)}>Delete</button>
                                             </Td>

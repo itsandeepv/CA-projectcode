@@ -112,7 +112,7 @@ const PaymentIn = () => {
     const { name, value } = event.target;
     setNewRowData({ ...newRowData, [name]: value });
 
-    console.log(newRowData, "<<<<");
+    // console.log(newRowData, "<<<<");
 
   };
 

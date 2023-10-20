@@ -1,20 +1,6 @@
 import React, { useState } from 'react';
 import {
     Box, Button, Flex, HStack, Image, Input, Select, Text, VStack, Wrap, Heading, List,
-    ListItem,
-    ListIcon,
-    OrderedList,
-
-    UnorderedList,
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalFooter,
-    ModalBody,
-    ModalCloseButton,
-    AspectRatio,
-    useDisclosure,
     Table,
     Thead,
     Tbody,
@@ -30,6 +16,10 @@ import {
 } from '@chakra-ui/react'
 import { Link } from "react-router-dom";
 import Slidebar from '../../Slidebar/Slidebar';
+import { deleteRequest, getRequest, postRequest } from '../../../../helpers/Services';
+import { userDetails } from '../../../../../Redux/config/Commen';
+import { toast } from 'react-toastify';
+import { useEffect } from 'react';
 
 
 const Oreder_Sale = () => {
@@ -70,17 +60,15 @@ const Oreder_Sale = () => {
 
     ////
     const [tableData, setTableData] = useState([
-        { id: 1, item: 'Item 1', quantity: 1, unitPrice: 10, taxPercent: 10, amount: 11 },
-        { id: 2, item: 'Item 2', quantity: 2, unitPrice: 20, taxPercent: 10, amount: 44 },
-        { id: 3, item: 'Item 3', quantity: 3, unitPrice: 30, taxPercent: 10, amount: 99 },
+        { id: 1, item: 'Item 1', quantity: 1, per_unit_price: 10, tax: 10, amount: 11 },
     ]);
 
     const [newRowData, setNewRowData] = useState({
-        id: null,
+        id: userDetails?.userid,
         item: '',
         quantity: 0,
-        unitPrice: 0,
-        taxPercent: 0,
+        per_unit_price: 0,
+        tax: 0,
         amount: 0,
     });
 
@@ -88,6 +76,7 @@ const Oreder_Sale = () => {
         const newData = [...tableData];
         newData[index][key] = event.target.value;
         setTableData(newData);
+        setNewRowData({ ...newRowData, [key]: event.target.value });
     };
 
     const handleAddRow = () => {
@@ -95,20 +84,33 @@ const Oreder_Sale = () => {
         setTableData([...tableData, { ...newRowData, id: newId }]);
     };
 
-    const handleDeleteRow = (index) => {
-        const newData = [...tableData];
-        newData.splice(index, 1);
-        setTableData(newData);
+    const handleDeleteRow = async (index, id) => {
+        const res = await deleteRequest(`/addSaleOrder/saleOrder/${id}`, userDetails?.token)
+        if (res?.status == 200) {
+            toast.success("Item delated success")
+            const newData = [...tableData];
+            newData.splice(index, 1);
+            setTableData(newData);
+        } else {
+            toast.error("Error occured")
+        }
     };
 
-    const handleSaveTableData = () => {
+    const handleSaveTableData = async () => {
         console.log(tableData);
+        const res = await postRequest("/addSaleOrder/saleOrder", newRowData, userDetails?.token)
+        // console.log(res, "<<<");
+        if (res.status == 200) {
+            toast.success(res.data?.message)
+        } else {
+            toast.error("Internal server error !")
+        }
         // Perform save logic here
     };
 
-    const calculateAmount = (quantity, unitPrice, taxPercent) => {
-        const amount = quantity * unitPrice;
-        const taxAmount = (taxPercent / 100) * amount;
+    const calculateAmount = (quantity, per_unit_price, tax) => {
+        const amount = quantity * per_unit_price;
+        const taxAmount = (tax / 100) * amount;
         return amount + taxAmount;
     };
     const calop = () => {
@@ -116,13 +118,27 @@ const Oreder_Sale = () => {
     }
     const calculateTotalOreder_SaleAmount = () => {
         const Oreder_SaleAmounts = tableData.map((row) => {
-            const amount = row.quantity * row.unitPrice;
-            const taxAmount = (row.taxPercent / 100) * amount;
+            const amount = row.quantity * row.per_unit_price;
+            const taxAmount = (row.tax / 100) * amount;
             return amount + taxAmount;
         });
         const totalOreder_SaleAmount = Oreder_SaleAmounts.reduce((total, amount) => total + amount, 0);
         return totalOreder_SaleAmount;
     };
+
+
+
+    const fetchData = async () => {
+        const res = await getRequest("/addSaleOrder/saleOrder", userDetails?.token)
+        if (res.status == 200) {
+            console.log(res, "<<</addSaleOrder/saleOrder");
+            setTableData(res?.data?.saleOrderAll)
+        }
+    }
+    useEffect(() => {
+        fetchData()
+    }, [])
+
 
     return (
 
@@ -130,15 +146,10 @@ const Oreder_Sale = () => {
 
 
             <Flex  >
-
                 <Slidebar />
-
-
-
                 <Box width={"80%"} padding="10px" m={"auto"} marginTop={"20px"}>
                     <h1>Sale Order Page</h1>
                     <Flex justifyContent={"space-between"} flexDirection={{
-
                         base: "column",
                         md: "row",
                         lg: "row"
@@ -244,23 +255,23 @@ const Oreder_Sale = () => {
                                 </Thead>
                                 <Tbody>
                                     {tableData.map((data, index) => (
-                                        <Tr key={data.id}>
-                                            <Td>{data.id}</Td>
+                                        <Tr key={data._id}>
+                                            <Td>{index + 1}</Td>
                                             <Td>
-                                                <input type="text" value={data.item} onChange={(e) => handleTableInputChange(e, index, 'item')} />
+                                                <input type="text" placeholder='Item Name' value={data.item} onChange={(e) => handleTableInputChange(e, index, 'item')} />
                                             </Td>
                                             <Td>
-                                                <input type="number" value={data.quantity} onChange={(e) => handleTableInputChange(e, index, 'quantity')} />
+                                                <input type="number" placeholder='quantity' value={data.quantity} onChange={(e) => handleTableInputChange(e, index, 'quantity')} />
                                             </Td>
                                             <Td>
-                                                <input type="number" value={data.unitPrice} onChange={(e) => handleTableInputChange(e, index, 'unitPrice')} />
+                                                <input type="number" placeholder='unit price' value={data.per_unit_price} onChange={(e) => handleTableInputChange(e, index, 'per_unit_price')} />
                                             </Td>
                                             <Td>
-                                                <input type="number" value={data.taxPercent} onChange={(e) => handleTableInputChange(e, index, 'taxPercent')} />
+                                                <input type="number" placeholder='Tax Rate' value={data.tax} onChange={(e) => handleTableInputChange(e, index, 'tax')} />
                                             </Td>
-                                            <Td> {calculateAmount(data.quantity, data.unitPrice, data.taxPercent)}</Td>
+                                            <Td> {calculateAmount(Number(data?.quantity), Number(data?.per_unit_price), Number(data?.tax))}</Td>
                                             <Td>
-                                                <button onClick={() => handleDeleteRow(index)}>Delete</button>
+                                                <button onClick={() => handleDeleteRow(index, data?._id)}>Delete</button>
                                             </Td>
                                         </Tr>
 

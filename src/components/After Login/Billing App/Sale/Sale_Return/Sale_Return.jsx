@@ -64,19 +64,19 @@
 
 
 
-//     const initialData = [{ date: '2022-05-01', refNo: '001', partyName: 'ABC Company', categoryName: 'Furniture', type: 'Sale', total: 5000, received: 2000, balance: 3000, }, { date: '2022-05-02', refNo: '002', partyName: 'XYZ Company', categoryName: 'Electronics', type: 'Purchase', total: 10000, received: 5000, balance: 5000, },];
+//     const initialData = [{ date: '2022-05-01', ref_no: '001', party_name: 'ABC Company', category_name: 'Furniture', type: 'Sale', total: 5000, recived: 2000, balance: 3000, }, { date: '2022-05-02', ref_no: '002', party_name: 'XYZ Company', category_name: 'Electronics', type: 'Purchase', total: 10000, recived: 5000, balance: 5000, },];
 
 
 //     const [data, setData] = useState(initialData);
-   
-    
+
+
 
 //     const handleChange = (event, index, field) => {
 //         const newData = [...data];
 //         newData[index][field] = event.target.value;
 //         setData(newData);
-        
-        
+
+
 //     };
 //     const totalAmount = data.reduce((total, sale) => {
 //         return total + sale.total;
@@ -85,7 +85,7 @@
 //         const newData = [...data];
 //         newData.splice(index, 1);
 //         setData(newData);
-        
+
 //     };
 
 
@@ -99,15 +99,15 @@
 //         setSearchTerm(e.target.value);
 //     };
 
-    
+
 
 //     const handleAddRow = () => {
-//         const newRow = { id: data.length + 1, date: '', refNo: '', partyName: '', categoryName: '', type: '', total: 0, received: 0, balance: 0 };
+//         const newRow = { id: data.length + 1, date: '', ref_no: '', party_name: '', category_name: '', type: '', total: 0, recived: 0, balance: 0 };
 //         setData([...data, newRow]);
 
 //     };
 
- 
+
 //     return (
 
 //         <>
@@ -166,7 +166,7 @@
 //                                         <th>Category Name</th>
 //                                         <th>Type</th>
 //                                         <th>Total</th>
-//                                         <th>Received</th>
+//                                         <th>recived</th>
 //                                         <th>Balance</th>
 //                                         <th>Print</th>
 //                                         <th>Delete</th>
@@ -185,22 +185,22 @@
 //                                             <td>
 //                                                 <input
 //                                                     type="text"
-//                                                     value={item.refNo}
-//                                                     onChange={(event) => handleChange(event, index, 'refNo')}
+//                                                     value={item.ref_no}
+//                                                     onChange={(event) => handleChange(event, index, 'ref_no')}
 //                                                 />
 //                                             </td>
 //                                             <td>
 //                                                 <input
 //                                                     type="text"
-//                                                     value={item.partyName}
-//                                                     onChange={(event) => handleChange(event, index, 'partyName')}
+//                                                     value={item.party_name}
+//                                                     onChange={(event) => handleChange(event, index, 'party_name')}
 //                                                 />
 //                                             </td>
 //                                             <td>
 //                                                 <input
 //                                                     type="text"
-//                                                     value={item.categoryName}
-//                                                     onChange={(event) => handleChange(event, index, 'categoryName')}
+//                                                     value={item.category_name}
+//                                                     onChange={(event) => handleChange(event, index, 'category_name')}
 //                                                 />
 //                                             </td>
 //                                             <td>
@@ -222,8 +222,8 @@
 //                                             <td>
 //                                                 <input
 //                                                     type="text"
-//                                                     value={item.received}
-//                                                     onChange={(e) => handleChange(e, index, "received")}
+//                                                     value={item.recived}
+//                                                     onChange={(e) => handleChange(e, index, "recived")}
 //                                                 />
 //                                             </td>
 //                                             <td>
@@ -259,7 +259,7 @@
 //                             <p>Total Estimate Amount: ₹{totalAmount}</p>
 
 //                         </Box>
-                        
+
 //                     </Box>
 //                 </Box>
 //             </Flex>
@@ -273,7 +273,7 @@
 
 
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box, Button, Flex, HStack, Image, Input, Select, Text, VStack, Wrap, Heading, List,
   ListItem,
@@ -304,6 +304,9 @@ import {
 } from '@chakra-ui/react'
 import { Link } from "react-router-dom";
 import Slidebar from '../../Slidebar/Slidebar';
+import { deleteRequest, getRequest, postRequest } from "../../../../helpers/Services";
+import { userDetails } from "../../../../../Redux/config/Commen";
+import { toast } from "react-toastify";
 
 
 const Sale_Return = () => {
@@ -339,27 +342,47 @@ const Sale_Return = () => {
 
 
 
-  const initialData = [{ date: '2022-05-01', refNo: '001', partyName: 'ABC Company', categoryName: 'Furniture', type: 'Sale', total: 5000, received: 2000, balance: 3000, }, { date: '2022-05-02', refNo: '002', partyName: 'XYZ Company', categoryName: 'ElecTronics', type: 'Purchase', total: 10000, received: 5000, balance: 5000, },];
+  const initialData = [{ date: '2022-05-01', ref_no: '001', party_name: 'ABC Company', category_name: 'Furniture', type: 'Sale', total: 5000, recived: 2000, balance: 3000, }, { date: '2022-05-02', ref_no: '002', party_name: 'XYZ Company', category_name: 'ElecTronics', type: 'Purchase', total: 10000, recived: 5000, balance: 5000, },];
 
 
   const [data, seTdata] = useState(initialData);
 
+  const [newRowData, setNewRowData] = useState({
+    date: '',
+    ref_no: '',
+    party_name: '',
+    category_name: '',
+    type: '',
+    total: 5000,
+    recived: 2000,
+    balance: 3000,
+  });
 
 
   const handleChange = (event, index, field) => {
     const newData = [...data];
     newData[index][field] = event.target.value;
     seTdata(newData);
+    const { name, value } = event.target;
+    setNewRowData({ ...newRowData, [name]: value });
 
+    console.log(newRowData, "<<<<");
 
   };
   const totalAmount = data.reduce((total, sale) => {
     return total + sale.total;
   }, 0);
-  const handleDelete = (index) => {
-    const newData = [...data];
-    newData.splice(index, 1);
-    seTdata(newData);
+  const handleDelete = async  (index ,id) => {
+    const res = await deleteRequest(`/addSaleReturn/saleReturn/${id}`,userDetails?.token)
+    if(res?.status == 200){
+      toast.success("Item delated success")
+      const newData = [...data];
+      newData.splice(index, 1);
+      seTdata(newData);
+    }else{
+      toast.error("Error occured")
+
+    }
 
   };
 
@@ -377,10 +400,29 @@ const Sale_Return = () => {
 
 
   const handleAddRow = () => {
-    const newRow = { id: data.lengTh + 1, date: '', refNo: '', partyName: '', categoryName: '', type: '', total: 0, received: 0, balance: 0 };
+    const newRow = { id: data.lengTh + 1, date: '', ref_no: '', party_name: '', category_name: '', type: '', total: 0, recived: 0, balance: 0 };
     seTdata([...data, newRow]);
-
   };
+
+  const handleSaveTableData = async () => {
+    // console.log(tableData);
+    const res = await postRequest("/addSaleReturn/saleReturn", newRowData, userDetails?.token)
+    if (res.status == 200) {
+      toast.success(res.data?.message)
+    } else {
+      toast.error("Internal server error !")
+    }
+  };
+
+  const fetchData = async () => {
+    const res = await getRequest("/addSaleReturn/saleReturn", userDetails?.token)
+    if (res.status == 200) {
+      seTdata(res?.data?.saleReturnAll)
+    }
+  }
+  useEffect(() => {
+    fetchData()
+  }, [])
 
 
   return (
@@ -391,7 +433,7 @@ const Sale_Return = () => {
       <Flex w="100%" >
         <Slidebar />
         <Box w="80%" m={"auto"} marginTop={"20px"}>
-        <Heading> Sale Return </Heading>
+          <Heading> Sale Return </Heading>
           <HStack justifyContent={"space-between"} padding={"50px"} boxShadow="rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px">
             <HStack gap={"20px"} flexDirection={{ base: "column", md: "row", lg: "row" }}>
               <div>
@@ -427,7 +469,7 @@ const Sale_Return = () => {
           </HStack>
           {/* table */}
           <Box margin={"10px"}>
-            <Input type="text" placeholder="Search" onChange={handleChanges} mt='4'/>
+            <Input type="text" placeholder="Search" onChange={handleChanges} mt='4' />
             <TableContainer width={{ base: "100%", md: "100%", lg: "100%", }} mt='4'>
               <Table>
                 <Thead>
@@ -437,7 +479,7 @@ const Sale_Return = () => {
                     <Th>Type</Th>
                     <Th>Date</Th>
                     <Th>Ref No.</Th>
-                    <Th>Received</Th>
+                    <Th>recived</Th>
                     <Th>Balance</Th>
                     <Th>Total</Th>
                     <Th>Print</Th>
@@ -451,31 +493,42 @@ const Sale_Return = () => {
                         <input
                           style={{ width: '100px' }}
                           type="text"
-                          value={item.partyName}
-                          onChange={(event) => handleChange(event, index, 'partyName')}
+                          placeholder="Party Name"
+                          value={item.party_name}
+                          name="party_name"
+                          onChange={(event) => handleChange(event, index, 'party_name')}
                         />
                       </Td>
                       <Td>
                         <input
                           style={{ width: '100px' }}
                           type="text"
-                          value={item.categoryName}
-                          onChange={(event) => handleChange(event, index, 'categoryName')}
+                          name="category_name"
+                          placeholder="Company Name"
+                          value={item.category_name}
+                          onChange={(event) => handleChange(event, index, 'category_name')}
                         />
                       </Td>
                       <Td>
                         <select
                           value={item.type}
+                          name="type"
+                          placeholder="Sales Type"
+
                           onChange={(event) => handleChange(event, index, 'type')}
                         >
+                          <option value="">Select Type</option>
                           <option value="Sale">Sale</option>
                           <option value="Purchase">Purchase</option>
                         </select>
                       </Td>
                       <Td>
                         <input
-                        style={{ width: '110px' }}
+                          style={{ width: '110px' }}
                           type="date"
+                          name="date"
+                          placeholder="Date "
+
                           value={item.date}
                           onChange={(event) => handleChange(event, index, 'date')}
                         />
@@ -484,22 +537,31 @@ const Sale_Return = () => {
                         <input
                           style={{ width: '80px' }}
                           type="text"
-                          value={item.refNo}
-                          onChange={(event) => handleChange(event, index, 'refNo')}
+                          name="ref_no"
+                          placeholder="Ref No"
+
+                          value={item.ref_no}
+                          onChange={(event) => handleChange(event, index, 'ref_no')}
                         />
                       </Td>
                       <Td>
                         <input
                           style={{ width: '80px' }}
                           type="text"
-                          value={item.received}
-                          onChange={(e) => handleChange(e, index, "received")}
+                          name="recived"
+                          placeholder="Recived Amount"
+
+                          value={item.recived}
+                          onChange={(e) => handleChange(e, index, "recived")}
                         />
                       </Td>
                       <Td>
                         <input
                           style={{ width: '80px' }}
-                          type="text"
+                          type="number"
+                          name="balance"
+                          placeholder="Balance"
+
                           value={item.balance}
                           onChange={(e) => handleChange(e, index, "balance")}
                         />
@@ -508,6 +570,9 @@ const Sale_Return = () => {
                         <input
                           style={{ width: '80px' }}
                           type="number"
+                          name="total"
+                          placeholder="Total "
+
                           value={item.total}
                           onChange={(e) => handleChange(e, index, "total")}
                         />
@@ -516,7 +581,7 @@ const Sale_Return = () => {
                         <Button fontSize={"10px"} bg={"blue.400"} onClick={() => handlePrint(item)}>Print</Button>
                       </Td>
                       <Td>
-                        <Button fontSize={"10px"} bg={"red.500"} onClick={() => handleDelete(item)}>Delete</Button>
+                        <Button fontSize={"10px"} bg={"red.500"} onClick={() => handleDelete(item ,item?._id)}>Delete</Button>
                       </Td>
 
 
@@ -532,6 +597,9 @@ const Sale_Return = () => {
             </TableContainer>
             <Box>
               <p>Total Estimate Amount: ₹{totalAmount}</p>
+            </Box>
+            <Box margin="10px" >
+              <Button width="100%" onClick={handleSaveTableData} bg={"gold"}>Save</Button>
             </Box>
           </Box>
         </Box>
