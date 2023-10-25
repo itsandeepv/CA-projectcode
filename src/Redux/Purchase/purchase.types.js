@@ -5,3 +5,4 @@ export const ERROR_PURCHASE="parties/ERROR_PURCHASE";
 export const GET_PURCHASE="parties/GET_PURCHASE";
 export const UPDATE_PURCHASE="parties/UPDATE_PURCHASE";
 export const DELETE_PURCHASE="parties/DELETE_PURCHASE";
+export const INDUVIDUAL_PURCHASE="parties/INDUVIDUAL_PURCHASEE";

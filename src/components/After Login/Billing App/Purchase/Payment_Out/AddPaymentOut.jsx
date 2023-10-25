@@ -10,11 +10,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   postPurchaseOutAction
 } from "../../../../../Redux/Purchaseout/purchaseout.action";
+import { userDetails } from '../../../../../Redux/config/Commen';
 
 const AddPaymentOut = () => {
   const [rows, setRows] = useState([{ id: 1 }]);
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
   const { firmId } = useSelector((store) => store.FirmRegistration);
   const dispatch = useDispatch();
   const Company = {
@@ -22,13 +22,13 @@ const AddPaymentOut = () => {
   };
 
   const initialFormData = {
-    partyName: '',
-    receiptNo: '',
-    phoneNo: '',
-    billNo: '',
+    party_name: '',
+    reciept_no: '',
+    phone_no: '',
+    // billNo: '',
     date: '',
-    totalAmount: '',
-    paidAmount: '',
+    total_amount: '',
+    paid_amount: '',
     firmId: firmId,
   };
 
@@ -40,11 +40,12 @@ const AddPaymentOut = () => {
       ...formData,
       [name]: value,
     });
+    // console.log(formData ,"<<<<formData");
   };
 
  const submitInput = async() =>{
-   await dispatch(postPurchaseOutAction(formData,token,firmId));
-   setFormData(initialFormData);
+   await dispatch(postPurchaseOutAction(formData,userDetails?.token,firmId));
+  //  setFormData(initialFormData);
  }
   return (
     <>
@@ -63,9 +64,9 @@ const AddPaymentOut = () => {
                 rightIcon={<ChevronDownIcon />}
                 placeholder='Reciept No.'
                 size='sm'
-                name="billNo"
+                name="reciept_no"
                 onChange={handleInputChange}
-                value={formData.billNo}
+                value={formData?.reciept_no}
               >
                 <option>1</option>
                 <option>2</option>
@@ -91,24 +92,24 @@ const AddPaymentOut = () => {
             <Flex justifyContent='space-between' mt='1'>
               <Flex justifyContent='center' width='40%'>
                 <Text mr='4' textAlign='left' mt='1' fontWeight='semibold'> Party Name : </Text>
-                <Input placeholder='Enter Party Name' size='sm' width='60%' name="partyName" value={formData.partyName} onChange={handleInputChange}/>
+                <Input placeholder='Enter Party Name' size='sm' width='60%' name="party_name" value={formData.party_name} onChange={handleInputChange}/>
               </Flex>
               <Flex justifyContent='center' width='40%'>
                 <Text mr='4' textAlign='left' mt='1' fontWeight='semibold'> Phone No : </Text>
                 <Input placeholder='Enter Contact Number' size='sm'
-                  type='number' width='60%' name="phoneNo" onChange={handleInputChange} value={formData.phoneNo}
+                  type='number' width='60%' name="phone_no" onChange={handleInputChange} value={formData.phone_no}
                 />
               </Flex>
             </Flex>
             <Flex justifyContent='space-between' mt='1'>
               <Flex justifyContent='center' width='40%'>
                 <Text mr='4' textAlign='left' mt='1' fontWeight='semibold'> Paid Amount(₹) : </Text>
-                <Input size='sm' width='40%' type='number' name="paidAmount" onChange={handleInputChange} value={formData.paidNumber}/>
+                <Input size='sm' width='40%' type='number' name="paid_amount" onChange={handleInputChange} value={formData.paidNumber}/>
               </Flex>
               <Flex justifyContent='center' width='40%'>
                 <Text mr='4' textAlign='left' mt='1' fontWeight='semibold'> Total Amount(₹) : </Text>
                 <Input size='sm'
-                  type='number' width='40%' name="totalAmount" onChange={handleInputChange} value={formData.totalAmount}
+                  type='number' width='40%' name="total_amount" onChange={handleInputChange} value={formData.total_amount}
                 />
               </Flex>
             </Flex>

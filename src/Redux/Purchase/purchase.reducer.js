@@ -5,6 +5,7 @@ import {
     GET_PURCHASE,
     UPDATE_PURCHASE,
     DELETE_PURCHASE,
+    INDUVIDUAL_PURCHASE
   } from "./purchase.types";
   
   const initialState = {
@@ -17,6 +18,9 @@ import {
     switch (type) {
       case LOADING_PURCHASE: {
         return { ...state, loading: true, error: false };
+      }
+      case INDUVIDUAL_PURCHASE: {
+        return { ...state, loading: false, error: false, induvidualParty: payload };
       }
       case SUCCESS_PURCHASE: {
         console.log(payload);

@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   postPurchaseAction
 } from "../../../../../Redux/Purchase/purchase.action";
+import { userDetails } from '../../../../../Redux/config/Commen';
 
 
 const AddPurchase = () => {
@@ -47,8 +48,6 @@ const AddPurchase = () => {
   const [formData, setFormData] = useState({
     partyName: '',
     phoneNo: '',
-    brand: '',
-    billNo: '',
     date: '',
     items: [{ idNumber: 1, itemName: '', qty: '', rate: '', totalAmount: '' }],
     firmId: firmId,
@@ -107,12 +106,11 @@ const AddPurchase = () => {
       totalAmount: totalFinalAmount,
     };
 
-    dispatch(postPurchaseAction(formData, token, firmId))
+    dispatch(postPurchaseAction(formData, userDetails?.token, firmId))
     // Clear the form by resetting the formData state
     setFormData({
       partyName: '',
       phoneNo: '',
-      brand: '',
       billNo: '',
       date: '',
       items: [{ idNumber: 1, itemName: '', qty: '', rate: '', totalAmount: '' }],

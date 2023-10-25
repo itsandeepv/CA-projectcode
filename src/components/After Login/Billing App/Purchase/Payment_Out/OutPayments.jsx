@@ -40,6 +40,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
     getPurchaseOutAction
 } from "../../../../../Redux/Purchaseout/purchaseout.action";
+import { getPartiesAction } from '../../../../../Redux/Parties/parties.action';
+import { userDetails } from '../../../../../Redux/config/Commen';
+
 
 
 const parties = [
@@ -59,7 +62,13 @@ const OutPayments = () => {
     const { purchaseOutData } = useSelector((store) => store.purchaseoutReducer);
     const [selectedDateFilter, setSelectedDateFilter] = useState('Select Date');
     const dispatch = useDispatch();
+    const { getPartiesData } = useSelector((store) => store.partiesReducer);
 
+    useEffect(()=>{
+        dispatch(getPartiesAction(userDetails?.token, firmId));
+    },[])
+
+    console.log(getPartiesData , "<<<getPartiesData");
     const handlePartySelect = (e) => {
         setSelectedParty(e.target.value);
     };
@@ -92,7 +101,6 @@ const OutPayments = () => {
 
     const filterDataByDate = (selectedFilter) => {
         const currentDate = new Date();
-
         switch (selectedFilter) {
             case 'Today':
                 return purchaseOutData.filter((party) => {
@@ -133,7 +141,7 @@ const OutPayments = () => {
     };
 
     const filterStartDateByEndDate = () => {
-        return purchaseOutData.filter((party) => {
+        return purchaseOutData?.filter((party) => {
             const partyDate = new Date(party.date);
             const start = startDate ? new Date(startDate) : null;
             const end = endDate ? new Date(endDate) : null;
@@ -153,21 +161,21 @@ const OutPayments = () => {
             }
         });
     }
-    console.log("🚀 ~ file: OutPayments.jsx:135 ~ filterDataByDate ~ filterDataByDate:", filterDataByDate())
-    console.log("🚀 ~ file: OutPayments.jsx:139 ~ filterStartDateByEndDate ~ filterStartDateByEndDate:", filterStartDateByEndDate)
+    // console.log("🚀 ~ file: OutPayments.jsx:135 ~ filterDataByDate ~ filterDataByDate:", filterDataByDate())
+    // console.log("🚀 ~ file: OutPayments.jsx:139 ~ filterStartDateByEndDate ~ filterStartDateByEndDate:", filterStartDateByEndDate)
 
     const handleDateFilterChange = (e) => {
         setSelectedDateFilter(e.target.value);
     };
 
     const calculateTotalAmount = () => {
-        return filterStartDateByEndDate().reduce((total, party) => total + party.totalAmount, 0);
+        return filterStartDateByEndDate().reduce((total, party) => total + party.total_amount, 0);
     };
 
     const calculateTotalBalance = () => {
         let totalBalance = 0;
         filterStartDateByEndDate().forEach((party) => {
-          totalBalance += party.totalAmount - party.paidAmount;
+          totalBalance += party.total_amount - party.paid_amount;
         });
         return totalBalance;
       };
@@ -219,9 +227,9 @@ const OutPayments = () => {
                             onChange={handlePartySelect}
                         >
                             <option value='All Parties'>All Parties</option>
-                            {parties.map((party) => (
-                                <option key={party.id} value={party.name}>
-                                    {party.name}
+                            {getPartiesData?.map((party) => (
+                                <option key={party?._id} value={party?.partyName}>
+                                    {party?.partyName}
                                 </option>
                             ))}
                         </Select>
@@ -276,16 +284,16 @@ const OutPayments = () => {
                             {filterStartDateByEndDate().map((party) => (
                                 <Tr>
                                     <Td style={{ border: '0.1px solid lightgray' }}>
-                                        {party?.partyName}
+                                        {party?.party_name}
                                     </Td>
                                     <Td style={{ border: '0.1px solid lightgray' }}>
                                         {formatDate(party.date)}
                                     </Td>
                                     <Td style={{ border: '0.1px solid lightgray' }}>
-                                        ₹ {party?.totalAmount}
+                                        ₹ {party?.total_amount}
                                     </Td>
                                     <Td style={{ border: '0.1px solid lightgray' }}>
-                                        ₹ {party?.totalAmount - party?.paidAmount}
+                                        ₹ {party?.total_amount - party?.paid_amount}
                                     </Td>
                                     <Td style={{ border: '0.1px solid lightgray' }}>
                                         <Flex gap='8px'>

@@ -38,8 +38,11 @@ import { useNavigate } from 'react-router-dom';
 import { FaPrint, FaSearch, FaShare } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-    getPurchaseAction
+    getPurchaseAction,
+    postPurchaseAction
 } from "../../../../../Redux/Purchase/purchase.action";
+import { userDetails } from '../../../../../Redux/config/Commen';
+
 
 const Purchase_Bills = () => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -56,7 +59,7 @@ const Purchase_Bills = () => {
         data.partyName.toLowerCase().includes(searchQuery.toLowerCase())
     );
     useEffect(() => {
-        dispatch(getPurchaseAction(token, firmId))
+        dispatch(getPurchaseAction( userDetails?.token, firmId))
     }, [firmId])
 
     const totalSum = purchaseData.reduce((total, data) => {

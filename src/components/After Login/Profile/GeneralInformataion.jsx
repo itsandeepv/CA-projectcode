@@ -27,6 +27,7 @@ import { userDetails } from '../../../Redux/config/Commen';
 
 const GeneralInformation = () => {
   const [isEditing, setIsEditing] = useState(false);
+  const [profiledetails, setprofile] = useState();
 
   const handleEditToggle = () => {
     setIsEditing((prev) => !prev);
@@ -34,8 +35,8 @@ const GeneralInformation = () => {
 
   // console.log(userDetails ,"<<<");
   
-  useEffect(()=>{
-    const res =  getRequest("/profile_get" ,userDetails?.token)
+  useEffect( async()=>{
+    const res =  await getRequest("/profile_get" ,userDetails?.token)
     console.log(res , "<<<<");
   },[])
 
