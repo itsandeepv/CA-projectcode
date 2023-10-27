@@ -7,6 +7,18 @@ export const Inputvalidate = (inputNameArray, post, setErrors) => {
     var regex = /^[0-9]+$/
     const emailRE = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     inputNameArray?.map((item) => {
+
+        if(item == "password"){
+            const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]+$/;
+            if (!post?.[item] ) {
+                newError[item] = "Required";
+                positionFocus = positionFocus || item;
+            } else if (!passwordRegex.test(post?.[item])) {
+                newError[item] = "Password should include one spacial letter and Capital letter";
+                positionFocus = positionFocus || item;
+            }
+        }
+
         if (item == "email") {
             if (!post?.[item] ) {
                 newError[item] = "Required";

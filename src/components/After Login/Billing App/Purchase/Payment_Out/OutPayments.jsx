@@ -68,7 +68,7 @@ const OutPayments = () => {
         dispatch(getPartiesAction(userDetails?.token, firmId));
     },[])
 
-    console.log(getPartiesData , "<<<getPartiesData");
+    // console.log(getPartiesData , "<<<getPartiesData");
     const handlePartySelect = (e) => {
         setSelectedParty(e.target.value);
     };

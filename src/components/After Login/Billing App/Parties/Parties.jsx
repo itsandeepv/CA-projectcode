@@ -92,7 +92,7 @@ const Parties = () => {
     }
   }
 
-  const userDetails = JSON.parse(sessionStorage.getItem("userDetails")) ? JSON.parse(sessionStorage.getItem("userDetails")) : null
+  const userDetails = JSON.parse(sessionStorage.getItem("companyDetails")) ? JSON.parse(sessionStorage.getItem("companyDetails")) : null
   // console.log(  userDetails?.token , "<<<<<<<")
 
   const [form, setForm] = useState({

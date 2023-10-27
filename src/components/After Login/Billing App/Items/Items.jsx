@@ -127,7 +127,7 @@ const Items = () => {
 
     console.log(form, "<<<<");
   };
-  const userDetails = JSON.parse(sessionStorage.getItem("userDetails")) ? JSON.parse(sessionStorage.getItem("userDetails")) : null
+  const userDetails = JSON.parse(sessionStorage.getItem("companyDetails")) ? JSON.parse(sessionStorage.getItem("companyDetails")) : null
   const inputNameArray = ["name", "description", "category", "brand", "stockQuantity", "price", "cost", "supplier", "expiryDate", "manufactureDate", "gstRate", "firmId","unit"]
   const [errors, setErrors] = useState([]);
 

@@ -134,7 +134,7 @@ const Company_name = (ppx) => {
     handleImages();
   }, [images]);
 
-  const userDetails = JSON.parse(sessionStorage.getItem("userDetails")) ? JSON.parse(sessionStorage.getItem("userDetails")) : null
+  const userDetails = JSON.parse(sessionStorage.getItem("companyDetails")) ? JSON.parse(sessionStorage.getItem("companyDetails")) : null
 
   useEffect(() => {
     dispatch(getFirmData(userDetails?.token));

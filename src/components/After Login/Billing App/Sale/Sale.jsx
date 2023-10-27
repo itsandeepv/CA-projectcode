@@ -21,6 +21,7 @@ import {
     getInvoiceAction
 } from "../../../../Redux/Invoice/invoice.action";
 import { userDetails } from '../../../../Redux/config/Commen';
+import moment from 'moment';
 
 const Sale = () => {
     const Company = {
@@ -82,20 +83,20 @@ const Sale = () => {
                                     getAllInvoice.map((data) =>
                                         <Tr key={data.id}>
                                             <Td style={{ border: '1px solid gray' }}>{data.invoiceNo}</Td>
-                                            <Td style={{ border: '1px solid gray' }}>{data.invoiceDate}</Td>
+                                            <Td style={{ border: '1px solid gray' }}>{moment(data.invoiceDate).format("ddd-mm-yy hh:mm")}</Td>
                                             <Td style={{ border: '1px solid gray' }}>{data.dueAmount}</Td>
-                                            <Td style={{ border: '1px solid gray' }}>0</Td>
+                                            <Td style={{ border: '1px solid gray' }}>{data.dueAmount}</Td>
                                             <Td style={{ border: '1px solid gray' }}>{data.finalAmount}</Td>
                                             <Td style={{ border: '1px solid gray' }}>
                                                 <Link color="blue.500" mr="2" textDecoration='underline' onClick={() => handleViewClick(data._id)}>
                                                     view
                                                 </Link>
-                                                <Link color="blue.500" mr="2">
+                                                {/* <Link color="blue.500" mr="2">
                                                     <Icon as={FiDownload} />
                                                 </Link>
                                                 <Link color="blue.500">
                                                     <Icon as={FiShare2} />
-                                                </Link>
+                                                </Link> */}
                                             </Td>
                                         </Tr>
                                     )

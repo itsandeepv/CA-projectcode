@@ -8,7 +8,7 @@ import Company_name from '../Company_name/Company_name';
 
 const AddCompanyForm = () => {
     const dispatch = useDispatch();
-    const UserDetails = sessionStorage.getItem("userDetails") ? JSON.parse(sessionStorage.getItem("userDetails")) : null
+    const UserDetails = sessionStorage.getItem("companyDetails") ? JSON.parse(sessionStorage.getItem("companyDetails")) : null
    
 //    const store = useSelector((state)=>state)
 //    console.log(store ,"<<<<<");
@@ -39,7 +39,7 @@ const AddCompanyForm = () => {
             reader.readAsDataURL(files[0]);
             reader.onload = () => {
                 setImageURL(reader.result);
-                setFormData({ ...formData, [name]: reader.result });
+                setFormData({ ...formData, [name]: files[0]?.name });
             };
             reader.onerror = (error) => console.log(error);
         } else {
