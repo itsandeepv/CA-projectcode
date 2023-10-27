@@ -20,7 +20,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
     getInvoiceAction
 } from "../../../../Redux/Invoice/invoice.action";
-import { userDetails } from '../../../../Redux/config/Commen';
 import moment from 'moment';
 
 const Sale = () => {
@@ -40,7 +39,8 @@ const Sale = () => {
     const modal1 = useDisclosure()
     const { firmId } = useSelector((store) => store.FirmRegistration);
     const { getAllInvoice } = useSelector((store) => store.invoiceReducer);
-    
+    const  userDetails =  JSON.parse(sessionStorage.getItem("companyDetails")) ?JSON.parse(sessionStorage.getItem("companyDetails")):null
+
     // console.log("🚀 ~ file: Sale.jsx:41 ~ Sale ~ firmId:", firmId ,getAllInvoice)
     const dispatch = useDispatch();
     const navigate = useNavigate();
