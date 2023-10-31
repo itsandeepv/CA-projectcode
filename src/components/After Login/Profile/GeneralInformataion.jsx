@@ -23,7 +23,6 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { useEffect } from 'react';
 import axios from 'axios';
 import { getRequest } from '../../helpers/Services';
-import { userDetails } from '../../../Redux/config/Commen';
 
 const GeneralInformation = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -34,7 +33,8 @@ const GeneralInformation = () => {
   };
 
   // console.log(userDetails ,"<<<");
-  
+ const  userDetails =  JSON.parse(sessionStorage.getItem("companyDetails")) ?JSON.parse(sessionStorage.getItem("companyDetails")):null
+
   useEffect( async()=>{
     const res =  await getRequest("/profile_get" ,userDetails?.token)
     console.log(res , "<<<<");

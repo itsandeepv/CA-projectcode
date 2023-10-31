@@ -26,7 +26,6 @@ const BillingSoftware = () => {
     const { firmId } = useSelector((store) => store.FirmRegistration);
     const { invoiceId } = useParams();
     const dispatch = useDispatch();
-    console.log(invoiceId, "<<<invoiceId");
     const { getOneInvoice } = useSelector((store) => store.invoiceReducer);
     const { getStockData } = useSelector((store) => store.stockReducer);
 
@@ -159,7 +158,7 @@ const BillingSoftware = () => {
                         </Flex>
 
 
-                        
+
                         {/* Invoice */}
                         <Box width="40%"
                             p='2'

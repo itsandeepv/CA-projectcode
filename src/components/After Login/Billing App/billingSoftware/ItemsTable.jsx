@@ -104,33 +104,35 @@ const ItemsTable = () => {
           {items.map((item ,index) => (
           <Tr key={item.id} height='50px'>
             <Td style={{ border: '1px solid lightgray' }}>
-              {item.id}
+              {index + 1}
               </Td>
             <Td style={{ border: '1px solid lightgray' }}>
-            <input type="text" value={item.name} name='name' onChange={(e) => handleTableInputChange(e, index, 'item')} />
+            {/* <input type="text" value={item.name} name='name' onChange={(e) => handleTableInputChange(e, index, 'item')} /> */}
+             
+            {item.name}
               </Td>
             <Td style={{ border: '1px solid lightgray' }}>
-            <input type="text" value={item.name} name='name' onChange={(e) => handleTableInputChange(e, index, 'item')} />
+            {/* <input type="text" value={item.name} name='name' onChange={(e) => handleTableInputChange(e, index, 'item')} /> */}
               
               {item.category}</Td>
             <Td style={{ border: '1px solid lightgray' }}>
-            <input type="text" value={item.name} name='name' onChange={(e) => handleTableInputChange(e, index, 'item')} />
+            {/* <input type="text" value={item.name} name='name' onChange={(e) => handleTableInputChange(e, index, 'item')} /> */}
 
               {item.quantity}</Td>
             <Td style={{ border: '1px solid lightgray' }}>
-            <input type="text" value={item.name} name='name' onChange={(e) => handleTableInputChange(e, index, 'item')} />
+            {/* <input type="text" value={item.name} name='name' onChange={(e) => handleTableInputChange(e, index, 'item')} /> */}
 
               {item.price}</Td>
             <Td style={{ border: '1px solid lightgray' }}>
-            <input type="text" value={item.name} name='name' onChange={(e) => handleTableInputChange(e, index, 'item')} />
+            {/* <input type="text" value={item.name} name='name' onChange={(e) => handleTableInputChange(e, index, 'item')} /> */}
 
               {item.gst}%</Td>
             <Td style={{ border: '1px solid lightgray' }}>
-            <input type="text" value={item.name} name='name' onChange={(e) => handleTableInputChange(e, index, 'item')} />
+            {/* <input type="text" value={item.name} name='name' onChange={(e) => handleTableInputChange(e, index, 'item')} /> */}
 
               {item.hsnCode}</Td>
             <Td style={{ border: '1px solid lightgray' }}>
-            <input type="number" value={item.totalPrice} name='totalPrice' onChange={(e) => handleTableInputChange(e, index, 'item')} />
+            {/* <input type="number" value={item.totalPrice} name='totalPrice' onChange={(e) => handleTableInputChange(e, index, 'item')} /> */}
 
               {item.totalPrice}</Td>
           </Tr>
@@ -159,7 +161,7 @@ const ItemsTable = () => {
           ))} */}
         </Tbody>
       </Table>
-      <Button onClick={handleAddRow}>Add Row +</Button>
+      {/* <Button onClick={handleAddRow}>Add Row +</Button> */}
 
     </TableContainer>
   );
