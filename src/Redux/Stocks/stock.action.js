@@ -27,7 +27,7 @@ export const getStockAction = (token, firmId) => (dispatch) => {
     });
 };
 
-export const postStockAction = (creds, token) => (dispatch) => {
+export const postStockAction = (creds, token ,modal1) => (dispatch) => {
   const headers = {
     token: `${token}`,
   };
@@ -38,10 +38,9 @@ export const postStockAction = (creds, token) => (dispatch) => {
     .post(url, creds, { headers })
     .then((res) => {
       dispatch({ type: SUCCESS_STOCKS, payload: res.data });
-      // console.log(res);
       if (res.status === 201) {
+        modal1.onClose()
         toast.success("Item added successfully")
-        // alert();
         dispatch(getStockAction(token, creds?.firmId));
       }
     })

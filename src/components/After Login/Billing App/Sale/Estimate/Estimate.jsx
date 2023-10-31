@@ -50,17 +50,6 @@ const Estimate = () => {
     const [invoiceDate, setInvoiceDate] = useState("");
     const [supplyDate, setSupplyDate] = useState("");
 
-
-
-    
-
-    const { isOpen, onOpen } = useDisclosure();
-    const [imageURL, setImageURL] = useState("");
-
-
-   
-
-
     // const handleRegisterFirm = () => {
     //     dispatch(firmRegisterAction(formData, UserDetails?.token));
     // };

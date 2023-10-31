@@ -55,6 +55,7 @@ const Company_name = (ppx) => {
   const initialRef = React.useRef(null);
   const finalRef = React.useRef(null);
   const [companyName, setCompanyName] = useState('');
+  const [companylog, setCompanyLogo] = useState('');
 
   const handleClick = (event) => {
     setIsShown((current) => !current);
@@ -120,8 +121,7 @@ const Company_name = (ppx) => {
     const selectedFirm = get_firm_data.find((firm) => firm._id === value);
     const selectedCompanyName = selectedFirm ? selectedFirm.companyName : "";
     const companyLogo = selectedFirm ? selectedFirm.companyLogo : "";
-    // console.log("🚀  companyLogo:", companyLogo ,value)
-
+    setCompanyLogo(selectedFirm ? selectedFirm.companyLogo:"")
     setCompanyName(selectedCompanyName) // update heading
     setForm({ ...form, companyName: selectedCompanyName });
 
@@ -146,12 +146,9 @@ const Company_name = (ppx) => {
       if (get_firm_data?.length > 0) {
         const selectedFirm = get_firm_data[0];
         const selectedCompanyName = selectedFirm ? selectedFirm.companyName : "";
-        const companyLogo = selectedFirm ? selectedFirm.companyLogo : "";
+        setCompanyLogo(selectedFirm ? selectedFirm.companyLogo:"")
         setCompanyName(selectedCompanyName) // update heading
-        setForm({ ...form, companyName: selectedCompanyName });
-  
-        // console.log(selectedFirm ,"<<<<" ,firmId)
-  
+        setForm({ ...form, companyName: selectedCompanyName });  
         dispatch(setFirmId(get_firm_data[0]?._id));
         dispatch(setFirmName(selectedCompanyName));
       }
@@ -233,7 +230,7 @@ const Company_name = (ppx) => {
           >
             <Flex pt='1'>
               <Image
-                src={ylogo}
+                src={ companylog ? companylog :ylogo}
                 width="28px"
                 height="28px"
                 borderRadius={"50%"}

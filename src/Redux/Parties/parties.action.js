@@ -50,7 +50,7 @@ export const getInduvidualPartiesAction = (token, firmId , id) => (dispatch) => 
   }
 };
 
-export const postPartiesAction = (creds, token, firmId) => (dispatch) => {
+export const postPartiesAction = (creds, token, firmId ,modal1) => (dispatch) => {
   const headers = {
     token: `${token}`,
   };
@@ -62,13 +62,15 @@ export const postPartiesAction = (creds, token, firmId) => (dispatch) => {
       // console.log(res);
       if (res.status === 201||200) {
         toast.success("party register success");
+        modal1.onClose()
         dispatch(getPartiesAction(token, firmId));
       }
     });
   } catch (error) {
-    console.log(error,"<<<16AABCU9603R1ZQ");
+    // console.log(error,"<<<16AABCU9603R1ZQ");
+    // modal1.onClose()
     if(error.response.data?.message){
-      toast.error(error.response.data?.message)
+      toast.error(error.response.data?.message ?error.response.data?.message :"Please try another email")
     }else{
       toast.error(error?.message)  
     }

@@ -8,7 +8,6 @@ import {
   getInduvidualPartiesAction
 } from "../../../../Redux/Parties/parties.action";
 import { useParams } from 'react-router-dom';
-import { userDetails } from '../../../../Redux/config/Commen';
 
 const PartyInvoice = () => {
   const Company = {
@@ -27,14 +26,14 @@ const PartyInvoice = () => {
       {
         invoiceNo: "INV2023001",
         invoiceDate: "2023-08-23",
-        paidAmount: 3000,
-        dueAmount: 2000,
+        paidAmount: 0,
+        dueAmount: 0,
       },
       {
         invoiceNo: "INV2023002",
         invoiceDate: "2023-08-30",
-        paidAmount: 1500,
-        dueAmount: 500,
+        paidAmount: 0,
+        dueAmount: 0,
       },
       // ...other invoices...
     ],
@@ -47,13 +46,12 @@ const PartyInvoice = () => {
   const { firmId } = useSelector((store) => store.FirmRegistration);
   const dispatch = useDispatch();
   const { induvidualParty } = useSelector((store) => store.partiesReducer);
-  console.log("🚀 ~ file: PartyInvoice.jsx:49 ~ PartyInvoice ~ getPartiesData:", induvidualParty)
-  const token = localStorage.getItem("token");
+  // console.log("🚀 ~ file: PartyInvoice.jsx:49 ~ PartyInvoice ~ getPartiesData:", induvidualParty)
   const { id } = useParams();
 
   const totalPaidAmount = calculateTotal("paidAmount");
   const totalDueAmount = calculateTotal("dueAmount");
-  // const userDetails = JSON.parse(sessionStorage.getItem("userDetails")) ?JSON.parse(sessionStorage.getItem("userDetails")):null
+  const userDetails = JSON.parse(sessionStorage.getItem("companyDetails")) ?JSON.parse(sessionStorage.getItem("companyDetails")):null
 
   useEffect(() => {
     dispatch(getInduvidualPartiesAction(userDetails?.token, firmId , id));
@@ -63,8 +61,6 @@ const PartyInvoice = () => {
     <>
      
       <Company_name company_name={Company.name} />
-   
-
       <Flex>
         <Slidebar />
         <Box bg="white" py="4" px="6" minH="80vh" flex="1" boxShadow="md">

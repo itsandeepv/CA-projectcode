@@ -39,17 +39,24 @@ const AddCompanyForm = () => {
             reader.readAsDataURL(files[0]);
             reader.onload = () => {
                 setImageURL(reader.result);
-                setFormData({ ...formData, [name]: files[0]?.name });
+                setFormData({ ...formData, [name]: files[0] });
             };
             reader.onerror = (error) => console.log(error);
         } else {
             setFormData({ ...formData, [name]: value });
         }
     };
+    
+    const multipldata = new FormData()
+    
+    Object.entries(formData)?.map(([key ,item] , index)=>{
+        // console.log(item ,key ,"<<<key");
+        multipldata.append(key ,item)
+    })
 
 
     const handleRegisterFirm = () => {
-        dispatch(firmRegisterAction(formData, UserDetails?.token));
+        dispatch(firmRegisterAction(multipldata, UserDetails?.token));
     };
 
 
@@ -57,7 +64,7 @@ const AddCompanyForm = () => {
         <>
             <Company_name />
             <Box className='container' width={"80%"} boxShadow={"rgba(20,20,20,0.8) 0px 7px 29px 0px "} margin={"100px auto"} padding="20px" borderRadius={"10px"}>
-                <Image src={formData.companyLogo} w="100px" h="100px" alt="No Image" />
+                <Image src={formData.companyLogo ? URL.createObjectURL(formData.companyLogo) :""} w="100px" h="100px" alt="No Image" />
                 <FormControl mt={4}>
                     <FormLabel>Logo</FormLabel>
                     <Input type="file" name="companyLogo" accept="image/*" onChange={handleChange} />

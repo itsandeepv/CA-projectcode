@@ -120,7 +120,7 @@ const Parties = () => {
 
     if (!validateGstnumber(inputNameArray, { gstNo: form?.gstNo, phoneNumber: form?.phoneNumber }, setErrors)) { return; }
     if (!Inputvalidate(["partyName", "GSTType", "state", "email", "shippingAddress", "phoneNumber", "gstNo", "billingAddress"], form, setErrors)) { return; }
-    dispatch(postPartiesAction(form, userDetails?.token, firmId));
+    dispatch(postPartiesAction(form, userDetails?.token, firmId ,modal1));
     // modal1.onClose();
 
   };

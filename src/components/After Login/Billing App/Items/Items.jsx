@@ -68,14 +68,14 @@ const Items = () => {
   const Categories = useSelector((store) => store.categoryReducer);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  console.log(":Categories", firmId)
+  // console.log(":Categories", firmId)
 
   useEffect(() => {
     if (selectedCategories.length === 0) {
       setFilteredProducts(getStockData);
     } else {
       const filtered = getStockData.filter((product) => {
-        return product.category.some((category) =>
+        return product.category?.some((category) =>
           selectedCategories.includes(category)
         );
       });
@@ -85,16 +85,16 @@ const Items = () => {
 
   const dispatch = useDispatch();
   const [form, setForm] = useState({
-    name: "",
+    name: "",itemCategory:"",
     description: "",
     category: "",
     brand: "",
     stockQuantity: "",
     price: "",
     cost: "",
-    supplier: "",
+    supplier: "test",
     expiryDate: "",
-    unit:"",
+    unit: "",
     manufactureDate: "",
     gstRate: "",
     firmId: firmId
@@ -124,17 +124,15 @@ const Items = () => {
     e.preventDefault();
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
-
-    console.log(form, "<<<<");
   };
   const userDetails = JSON.parse(sessionStorage.getItem("companyDetails")) ? JSON.parse(sessionStorage.getItem("companyDetails")) : null
-  const inputNameArray = ["name", "description", "category", "brand", "stockQuantity", "price", "cost", "supplier", "expiryDate", "manufactureDate", "gstRate", "firmId","unit"]
+  const inputNameArray = ["name", "description","itemCategory", "category", "brand", "stockQuantity", "price", "cost", "supplier", "expiryDate", "manufactureDate", "gstRate", "firmId", "unit"]
   const [errors, setErrors] = useState([]);
 
   const handleItemsAdd = () => {
     if (!Inputvalidate(inputNameArray, form, setErrors)) { return; }
-    dispatch(postStockAction(form, userDetails?.token));
-    modal1.onClose();
+    dispatch(postStockAction(form, userDetails?.token ,modal1));
+    // modal1.onClose();
   };
 
   useEffect(() => {
@@ -144,8 +142,7 @@ const Items = () => {
 
   const handleAddCategory = () => {
     // Logic to add the new category
-    dispatch(postCategoryAction(categoryForm, userDetails?.token, firmId));
-    modal2.onClose();
+    dispatch(postCategoryAction(categoryForm, userDetails?.token, firmId ,modal2));
   };
 
   const handleCategoryChange = (categoryName) => {
@@ -181,8 +178,7 @@ const Items = () => {
             {/* select categories */}
             <Menu>
               <MenuButton as={Button} backgroundColor='gray.100' margin="10px" px="4"
-                rightIcon={<ChevronDownIcon />}
-              >
+                rightIcon={<ChevronDownIcon />}>
                 Select Category
               </MenuButton>
               <MenuList>
@@ -275,10 +271,33 @@ const Items = () => {
             maxWidth='80%'
           >
             <ModalHeader>Add New Item</ModalHeader>
+
             <ModalCloseButton />
             <ModalBody>
               {/* item details */}
               <Flex>
+                <FormControl margin={"10px"}>
+                  <FormLabel>Category :</FormLabel>
+                  <Select name="itemCategory" value={form?.itemCategory} onChange={handleChangeItems}
+                  >
+                    {/* {
+                      Categories.categories.length > 0 ? Categories?.categories?.map((category, id) => {
+
+                        <option> {category.name}</option>
+                      }) :
+                        <> */}
+                          <option>Select Category</option>
+                          <option>Elctronices</option>
+                          <option>Cloths</option>
+                          <option>Others</option>
+                        {/* </>
+                    } */}
+
+                  </Select>
+
+                  {/* {hasValidationError(errors, "name") ? (<span className="has-cust-error-white">{validationError(errors, "name")}</span>) : null} */}
+
+                </FormControl>
                 <FormControl margin={"10px"}>
                   <FormLabel>Item Name :</FormLabel>
                   <Input
@@ -353,6 +372,7 @@ const Items = () => {
                     value={form.price}
                     name="price"
                     onChange={handleChangeItems}
+                    style={form.price < form.cost ? {border:"1px solid red"}:{}}
                   />
                   {hasValidationError(errors, "price") ? (<span className="has-cust-error-white">{validationError(errors, "price")}</span>) : null}
 

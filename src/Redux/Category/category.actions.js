@@ -20,7 +20,6 @@ export const getCategoriesAction = (token, firmId) => (dispatch) => {
     const url = `${LIVE_URL2}/category/getcategory/${firmId}`;
     axios.get(url, { headers }).then((res) => {
       dispatch({ type: GET_CATEGORIES, payload: res.data });
-      
     });
   } catch (error) {
     console.log(error);
@@ -28,7 +27,7 @@ export const getCategoriesAction = (token, firmId) => (dispatch) => {
   }
 };
 
-export const postCategoryAction = (creds, token, firmId) => (dispatch) => {
+export const postCategoryAction = (creds, token, firmId ,modal2) => (dispatch) => {
   const headers = {
     token: `${token}`,
   };
@@ -38,14 +37,18 @@ export const postCategoryAction = (creds, token, firmId) => (dispatch) => {
     axios.post(url, creds, { headers }).then((res) => {
       dispatch({ type: SUCCESS_CATEGORIES, payload: res.data });
       // console.log(res);
-     
-      if (res.status === 200) {
+      if (res.status === 200|| 201) {
+        modal2.onClose();
+        dispatch(getCategoriesAction(token, firmId));
         toast.success("Category registered successfully")
         dispatch(getCategoriesAction(token, firmId));
       }
     });
   } catch (error) {
     console.log(error);
+    if(error){
+      toast.error(error?.messsage)
+    }
     dispatch({ type: ERROR_CATEGORIES, payload: error });
   }
 };

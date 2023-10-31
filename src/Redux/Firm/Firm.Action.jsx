@@ -32,9 +32,9 @@ export const getFirmData = (token) => (dispatch) => {
 
 
 export const firmRegisterAction = (formData, token) => (dispatch) => {
-    // console.log(formData, "token", token);
+    console.log(formData, "token", token);
     const headers = {
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/json',
         'token': `${token}`
     };
 
